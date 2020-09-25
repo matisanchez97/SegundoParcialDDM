@@ -55,6 +55,9 @@
         <argument
             android:name="currentUserId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_containerProductFragment_to_addDialogFragment"
+            app:destination="@id/addDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/addDialogFragment"
@@ -69,6 +72,9 @@
             app:argType="integer" />
         <argument
             android:name="editProductId"
+            app:argType="integer" />
+        <argument
+            android:name="newProductId"
             app:argType="integer" />
     </fragment>
     <fragment

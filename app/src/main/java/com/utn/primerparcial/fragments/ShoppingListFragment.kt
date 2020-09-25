@@ -75,7 +75,7 @@ class ShoppingListFragment : Fragment() {
                         // Handle share icon press
                         if (selectedProducts!!.size == 1){
                             editProductPos = shoppingList!!.indexOf(selectedProducts!![0])
-                            val action_7 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,editProductPos)
+                            val action_7 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,editProductPos,-1)
                             actionMode?.finish()
                             findNavController().navigate(action_7)
                         }
@@ -161,7 +161,7 @@ class ShoppingListFragment : Fragment() {
         }
 
         butFloatAdd.setOnClickListener {
-            val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1)
+            val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
             findNavController().navigate(action_5)
         }
 

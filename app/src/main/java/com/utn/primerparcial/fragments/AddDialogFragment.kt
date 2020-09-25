@@ -48,6 +48,8 @@ class AddDialogFragment() : Fragment() {
     var selectedProduct: Product? = null
     var currentUser: User? = null
     var currentUserId = 0
+    var newProductId = 0
+    var newProduct: Product? = null
     var editProductPos = 0
     var editProduct: Product? = null
     private var db: appDatabase? = null
@@ -80,6 +82,7 @@ class AddDialogFragment() : Fragment() {
         super.onStart()
         currentUserId = AddDialogFragmentArgs.fromBundle(requireArguments()).currentUserId
         editProductPos = AddDialogFragmentArgs.fromBundle(requireArguments()).editProductId
+        newProductId = AddDialogFragmentArgs.fromBundle(requireArguments()).newProductId
         db = appDatabase.getAppDataBase(v.context)
         productDao = db?.productDao()
         userDao = db?.userDao()
@@ -104,9 +107,12 @@ class AddDialogFragment() : Fragment() {
             textProductNameList.setText(editProduct!!.name, false)
             textProductBrandList.setText(editProduct!!.brand, false)
             textEditProductQuantity.setText(editProduct!!.quantity.toString())
-            textProductNameList.setAdapter(adapterName)
-            textProductBrandList.setAdapter(adapterBrand)
+        }
 
+        if (newProductId != -1){
+            newProduct = productDao?.loadProductById(newProductId)
+            textProductNameList.setText(newProduct!!.name,false)
+            textProductBrandList.setText(newProduct!!.brand, false)
         }
 
         textProductNameList.setOnItemClickListener { parent, view, position, id ->
@@ -132,15 +138,15 @@ class AddDialogFragment() : Fragment() {
                 )
                 selectedProduct?.quantity = textEditProductQuantity.text.toString().toInt()
                 if (editProductPos != -1) {
-                    currentUser?.shopping_list?.set(editProductPos, selectedProduct!!)
-                } else {
-                    if (currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }!!) {
-                        val index =
-                            currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }
-                        currentUser!!.shopping_list[index!!].quantity += selectedProduct!!.quantity
-                    } else
-                        currentUser?.shopping_list?.add(selectedProduct!!)
+                    currentUser?.shopping_list?.removeAt(editProductPos)
                 }
+                    if (currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }!!) {
+                        val index = currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }
+                        currentUser!!.shopping_list[index!!].quantity += selectedProduct!!.quantity
+                    } else if (editProductPos != -1)
+                        currentUser?.shopping_list?.add(editProductPos,selectedProduct!!)
+                    else
+                        currentUser?.shopping_list?.add(selectedProduct!!)
                 userDao?.updatePerson(currentUser)
             } else {
                 stringAux = textProductBrandList.text.toString().substringBefore(" x")
