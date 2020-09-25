@@ -1,6 +1,8 @@
 package com.utn.primerparcial.fragments
 
 import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,6 +26,7 @@ class ContainerProductFragment : Fragment() {
     lateinit var v:View
     lateinit var viewPager: ViewPager2
     lateinit var tabLayout: TabLayout
+    private val PREF_NAME = "myPreferences"
     var selectedProductId: Int = 0
     var currentUserId: Int = 0
     override fun onCreateView(
@@ -39,10 +42,14 @@ class ContainerProductFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        val sharedPref: SharedPreferences= requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
         selectedProductId = ContainerProductFragmentArgs.fromBundle(requireArguments()).selectedProductId
         currentUserId = ContainerProductFragmentArgs.fromBundle(requireArguments()).currentUserId
+        editor.putInt("CURRENT_USER_ID",currentUserId)
+        editor.putInt("SELECTED_PRODUCT_ID",selectedProductId)
+        editor.apply()
         viewPager.adapter = ViewPageAdapter(requireActivity(),selectedProductId)
-
         TabLayoutMediator(tabLayout, viewPager, {tab, position ->
             when (position) {
                 0 -> tab.text = "Detail"
@@ -57,10 +64,10 @@ class ContainerProductFragment : Fragment() {
         var productId = selectedProductId
         override fun createFragment(position: Int): Fragment {
             return when(position){
-                0 -> DetailProductFragment(this.productId)
-                1 -> SimilarProductFragment(this.productId)
-                2 -> BrandProductFragment(this.productId)
-                else -> DetailProductFragment(this.productId)
+                0 -> DetailProductFragment()
+                1 -> SimilarProductFragment()
+                2 -> BrandProductFragment()
+                else -> DetailProductFragment()
             }
         }
 

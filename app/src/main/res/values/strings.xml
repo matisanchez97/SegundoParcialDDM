@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Primer Parcial</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="birthdate">Birthday</string>
     <string name="but_login">Login</string>
     <string name="phone_num">Phone Number</string>
@@ -39,12 +38,12 @@
     <string name="favorite">Favourite</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="more">More</string>
+    <string name="settings">Settings</string>
     <string name="content_description_search">Search Product</string>
     <string name="content_description_favorite">Favourite Products</string>
     <string name="content_description_edit">Edit Product</string>
     <string name="content_description_delete">Delete Product</string>
-    <string name="content_description_more">More Options</string>
+    <string name="content_description_settings">App Settings</string>
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
     <string name="signature_title">Your signature</string>
@@ -53,7 +52,12 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-
+    <string name="title_activity_settings">SettingsActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 
 
 </resources>

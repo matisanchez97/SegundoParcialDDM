@@ -5,11 +5,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -49,7 +46,7 @@ class AddDialogFragment() : Fragment() {
     var productListAux: MutableList<String> = ArrayList<String>()
     var measureAux: String = ""
     var selectedProduct: Product? = null
-    var currentUser : User? = null
+    var currentUser: User? = null
     var currentUserId = 0
     var editProductPos = 0
     var editProduct: Product? = null
@@ -66,13 +63,14 @@ class AddDialogFragment() : Fragment() {
         v = inflater.inflate(R.layout.fragment_add_dialog, container, false)
         textEditProductQuantity = v.findViewById(R.id.textEditQuantity)
         textProductBrandList = v.findViewById(R.id.textEditProductBrand)
-        textProductNameList =  v.findViewById(R.id.textEditProductName)
+        textProductNameList = v.findViewById(R.id.textEditProductName)
         butAdd = v.findViewById(R.id.buttonAdd)
         butSust = v.findViewById(R.id.buttonSust)
         butAccept = v.findViewById(R.id.buttonAccept)
         butCancel = v.findViewById(R.id.buttonCancel)
         return v
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -89,21 +87,22 @@ class AddDialogFragment() : Fragment() {
 
         (activity as MainActivity).supportActionBar?.title = getString(R.string.title_7)
 
-        for(product in productDao?.loadAllProducts()!!){
-            if(!(productListName.contains(product.name)))
+        for (product in productDao?.loadAllProducts()!!) {
+            if (!(productListName.contains(product.name)))
                 productListName.add(product.name)
             if (!(productListBrand.contains(product.brand)))
                 productListBrand.add(product.brand)
         }
-        val adapterName = ArrayAdapter<String>(requireContext(),R.layout.area_item, productListName)
-        val adapterBrand = ArrayAdapter<String>(requireContext(),R.layout.area_item, productListBrand)
+        val adapterName = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListName)
+        val adapterBrand = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListBrand)
         textProductNameList.setAdapter(adapterName)
         textProductBrandList.setAdapter(adapterBrand)
 
-        if(editProductPos != -1){
+        if (editProductPos != -1) {
+            butAccept.text = getString(R.string.edit)
             editProduct = currentUser!!.shopping_list[editProductPos]
-            textProductNameList.setText(editProduct!!.name)
-            textProductBrandList.setText(editProduct!!.brand)
+            textProductNameList.setText(editProduct!!.name, false)
+            textProductBrandList.setText(editProduct!!.brand, false)
             textEditProductQuantity.setText(editProduct!!.quantity.toString())
             textProductNameList.setAdapter(adapterName)
             textProductBrandList.setAdapter(adapterBrand)
@@ -112,49 +111,61 @@ class AddDialogFragment() : Fragment() {
 
         textProductNameList.setOnItemClickListener { parent, view, position, id ->
             productListAux.removeAll(productListAux)
-            for(product in productDao?.loadProductsByName(productListName[position])!!){
-                if(!(productListAux.contains(product.brand))) {
+            for (product in productDao?.loadProductsByName(productListName[position])!!) {
+                if (!(productListAux.contains(product.brand))) {
                     productListAux.add(product.brand)
                     measureAux = product.measure
-                }
-                else{
+                } else {
                     productListAux[productListAux.size - 1] += " x" + measureAux
                     productListAux.add(product.brand + " x" + product.measure)
                 }
             }
-            val adapterAux = ArrayAdapter<String>(requireContext(),R.layout.area_item, productListAux)
+            val adapterAux = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListAux)
             textProductBrandList.setAdapter(adapterAux)
         }
 
         butAccept.setOnClickListener {
-            if((!textProductBrandList.text.contains(" x"))) {
-                selectedProduct = productDao?.loadProductByNameAndBrand(textProductNameList.text.toString(), textProductBrandList.text.toString())
+            if ((!textProductBrandList.text.contains(" x"))) {
+                selectedProduct = productDao?.loadProductByNameAndBrand(
+                    textProductNameList.text.toString(),
+                    textProductBrandList.text.toString()
+                )
                 selectedProduct?.quantity = textEditProductQuantity.text.toString().toInt()
-                if(currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand}!!){
-                    val index = currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }
-                    if(editProductPos != -1)
-                        currentUser?.shopping_list!![index!!].quantity = selectedProduct!!.quantity
-                    else
+                if (editProductPos != -1) {
+                    currentUser?.shopping_list?.set(editProductPos, selectedProduct!!)
+                } else {
+                    if (currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }!!) {
+                        val index =
+                            currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }
                         currentUser!!.shopping_list[index!!].quantity += selectedProduct!!.quantity
+                    } else
+                        currentUser?.shopping_list?.add(selectedProduct!!)
                 }
-                else
-                    currentUser?.shopping_list?.add(selectedProduct!!)
                 userDao?.updatePerson(currentUser)
-            }
-            else{
+            } else {
                 stringAux = textProductBrandList.text.toString().substringBefore(" x")
                 measureAux = textProductBrandList.text.toString().substringAfter(" x")
-                selectedProduct = productDao?.loadProductByNameAndBrandAndMeasure(textProductNameList.text.toString(),stringAux,measureAux)
+                selectedProduct = productDao?.loadProductByNameAndBrandAndMeasure(
+                    textProductNameList.text.toString(),
+                    stringAux,
+                    measureAux
+                )
                 selectedProduct?.quantity = textEditProductQuantity.text.toString().toInt()
                 currentUser?.shopping_list?.add(selectedProduct!!)
                 userDao?.updatePerson(currentUser)
             }
-            val action_6 = AddDialogFragmentDirections.actionAddDialogFragmentToShoppinglistFragment(currentUserId)
+            val action_6 =
+                AddDialogFragmentDirections.actionAddDialogFragmentToShoppinglistFragment(
+                    currentUserId
+                )
             findNavController().navigate(action_6)
         }
 
         butCancel.setOnClickListener {
-            val action_7 = AddDialogFragmentDirections.actionAddDialogFragmentToShoppinglistFragment(currentUserId)
+            val action_7 =
+                AddDialogFragmentDirections.actionAddDialogFragmentToShoppinglistFragment(
+                    currentUserId
+                )
             findNavController().navigate(action_7)
         }
 
@@ -167,30 +178,8 @@ class AddDialogFragment() : Fragment() {
         butSust.setOnClickListener {
             var aux = 0
             aux = textEditProductQuantity.text.toString().toInt() - 1
-            if(aux>=0)
+            if (aux >= 0)
                 textEditProductQuantity.setText(aux.toString())
         }
     }
-
-
-
-    /*override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let{
-            val builder = AlertDialog.Builder(it)
-            val inflater = requireActivity().layoutInflater;
-
-            builder.setView(inflater.inflate(R.layout.fragment_add_dialog,null))
-                .setPositiveButton(R.string.accept,
-                    DialogInterface.OnClickListener { dialog, id ->
-
-
-                    })
-                .setNegativeButton(R.string.cancel,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // Send the negative button event back to the host activity
-                        getDialog()?.cancel()
-                    })
-            builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
-    }*/
 }

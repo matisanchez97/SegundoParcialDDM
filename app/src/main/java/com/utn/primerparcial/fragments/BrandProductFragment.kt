@@ -1,13 +1,18 @@
 package com.utn.primerparcial.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
+import com.utn.primerparcial.MainActivity
 import com.utn.primerparcial.R
 import com.utn.primerparcial.adapters.ShoppingListAdapter
 import com.utn.primerparcial.database.appDatabase
@@ -20,7 +25,7 @@ import com.utn.primerparcial.entities.Product
  * Use the [BrandProductFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class BrandProductFragment(productId:Int) : Fragment() {
+class BrandProductFragment() : Fragment() {
 
     lateinit var v: View
     lateinit var recyclerBrandProducts: RecyclerView
@@ -30,7 +35,9 @@ class BrandProductFragment(productId:Int) : Fragment() {
     private var db: appDatabase? = null
     private var productDao: productDao? = null
 
-    var productId = productId
+    var productId: Int = 0
+    private val PREF_NAME = "myPreferences"
+    private var editor: SharedPreferences.Editor? = null
     var selectedProduct: Product? = null
     var brandProductList: MutableList<Product>? = ArrayList<Product>()
 
@@ -46,6 +53,9 @@ class BrandProductFragment(productId:Int) : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        editor = sharedPref.edit()
+        productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
         db = appDatabase.getAppDataBase(v.context)
         productDao = db?.productDao()
         selectedProduct = productDao?.loadProductById(productId)
@@ -61,6 +71,11 @@ class BrandProductFragment(productId:Int) : Fragment() {
     }
     fun OnItemClick(position: Int,cardView: CardView){
         selectedProduct = brandProductList!![position]
+        editor?.putInt("SELECTED_PRODUCT_ID",selectedProduct!!.id)
+        editor?.apply()
+        val tabLayout = (activity as MainActivity).findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout.getTabAt(0)?.select()
+
     }
     fun OnItemLongClick(position: Int, cardView: CardView){
 

@@ -110,6 +110,23 @@ class ShoppingListFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = when(item.itemId) {
+
+            R.id.favorite ->""
+
+            R.id.search ->""
+
+            R.id.more -> {
+                val action_8 = ShoppingListFragmentDirections.actionShoppinglistFragmentToSettingsActivity()
+                findNavController().navigate(action_8)
+            }
+
+            else -> ""
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
