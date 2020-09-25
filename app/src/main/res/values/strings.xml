@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Primer Parcial</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="birthdate">Birthday</string>
+    <string name="but_login">Login</string>
+    <string name="phone_num">Phone Number</string>
+    <string name="but_register">Register</string>
+    <string name="img_description">Icon_image</string>
+    <string name="name">First Name</string>
+    <string name="pass_checkbox">Show password</string>
+    <string name="password">Password</string>
+    <string name="area_code">Area</string>
+    <string name="title_1">Shopping List</string>
+    <string name="title_2">CREATE ACCOUNT</string>
+    <string name="title_3">Shopping List</string>
+    <string name="title_4">Product Information</string>
+    <string name="title_5">Similar Products</string>
+    <string name="title_6">Products of the same Brand</string>
+    <string name="title_7">Add Product</string>
+    <string name="username">Username</string>
+    <string name="icon_acc">Icon for name</string>
+    <string name="icon_phone">Icon for phone number</string>
+    <string name="icon_date">Icon for birthday</string>
+    <string name="img_acc_item">Icon of the account</string>
+    <string name="error_msg">Field can\'t be empty</string>
+    <string name="error_msg_usr_1">Username doesn\'t exists</string>
+    <string name="error_msg_usr_2">Username already exists</string>
+    <string name="error_msg_pass">Wrong password</string>
+    <string name="fab_content_desc">Button to add product</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_brand">Product Brand</string>
+    <string name="product_quantity">0</string>
+    <string name="but_accept">Add</string>
+    <string name="but_cancel">Cancel</string>
+    <string name="but_add">+</string>
+    <string name="but_sust">-</string>
+    <string name="search">Search</string>
+    <string name="favorite">Favourite</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="more">More</string>
+    <string name="content_description_search">Search Product</string>
+    <string name="content_description_favorite">Favourite Products</string>
+    <string name="content_description_edit">Edit Product</string>
+    <string name="content_description_delete">Delete Product</string>
+    <string name="content_description_more">More Options</string>
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+
+
+</resources>

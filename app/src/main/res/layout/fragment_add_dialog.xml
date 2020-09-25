@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".fragments.AddDialogFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textProductName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:endIconMode="dropdown_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline20"
+        app:layout_constraintStart_toStartOf="@+id/guideline19"
+        app:layout_constraintTop_toTopOf="@+id/guideline26"
+        app:layout_constraintVertical_bias="0.0">
+
+        <AutoCompleteTextView
+            android:id="@+id/textEditProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/product_name"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textProductBrand"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:endIconMode="dropdown_menu"
+        app:layout_constraintBottom_toTopOf="@+id/guideline24"
+        app:layout_constraintEnd_toStartOf="@+id/guideline20"
+        app:layout_constraintStart_toStartOf="@+id/guideline19"
+        app:layout_constraintTop_toBottomOf="@+id/textProductName">
+
+        <AutoCompleteTextView
+            android:id="@+id/textEditProductBrand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/product_brand"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textFieldQuantity"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline25"
+        app:layout_constraintEnd_toStartOf="@+id/guideline23"
+        app:layout_constraintStart_toStartOf="@+id/guideline22"
+        app:layout_constraintTop_toTopOf="@+id/guideline24">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/textEditQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/product_quantity"
+            android:textAlignment="center" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.55" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.45" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <Button
+        android:id="@+id/buttonAccept"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/but_accept"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline20"
+        app:layout_constraintStart_toStartOf="@+id/guideline17"
+        app:layout_constraintTop_toTopOf="@+id/guideline25" />
+
+
+    <Button
+        android:id="@+id/buttonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="@string/but_add"
+        app:layout_constraintBottom_toTopOf="@+id/guideline25"
+        app:layout_constraintEnd_toStartOf="@+id/guideline20"
+        app:layout_constraintStart_toStartOf="@+id/guideline23"
+        app:layout_constraintTop_toTopOf="@+id/guideline24" />
+
+
+    <Button
+        android:id="@+id/buttonSust"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="@string/but_sust"
+        app:layout_constraintBottom_toTopOf="@+id/guideline25"
+        app:layout_constraintEnd_toStartOf="@+id/guideline22"
+        app:layout_constraintStart_toStartOf="@+id/guideline19"
+        app:layout_constraintTop_toTopOf="@+id/guideline24" />
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/but_cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline18"
+        app:layout_constraintStart_toStartOf="@+id/guideline19"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSust" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.36" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.64" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.79899496" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

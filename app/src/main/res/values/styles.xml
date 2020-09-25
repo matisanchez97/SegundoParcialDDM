@@ -1,0 +1,39 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:actionMenuTextColor">@color/colorText</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
+        <item name="snackbarButtonStyle">@style/Widget.App.SnackbarButton</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeStyle">@style/Widget.App.ActionMode</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_close_24dp</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
+    </style>
+
+    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Snackbar</item>
+        <item name="actionTextColorAlpha">1</item>
+    </style>
+
+    <style name="Widget.App.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
+        <item name="android:textColor">#FEDBD0</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Snackbar" parent="">
+        <item name="colorPrimary">#FEDBD0</item>
+        <item name="colorOnSurface">#442C2E</item>
+    </style>
+
+    <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">
+        <item name="titleTextStyle">?attr/textAppearanceHeadline6</item>
+        <item name="subtitleTextStyle">?attr/textAppearanceSubtitle1</item>
+        <item name="background">@color/material_grey_900</item>
+    </style>
+
+
+
+</resources>

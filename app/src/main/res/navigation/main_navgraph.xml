@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navgraph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.utn.primerparcial.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_welcomeFragment"
+            app:destination="@id/shoppinglistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.utn.primerparcial.fragments.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shoppinglistFragment"
+        android:name="com.utn.primerparcial.fragments.ShoppingListFragment"
+        android:label="fragment_shopping_list"
+        tools:layout="@layout/fragment_shopping_list">
+        <argument
+            android:name="loggedUserId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_shoppinglistFragment_to_containerProductFragment"
+            app:destination="@id/containerProductFragment" />
+        <action
+            android:id="@+id/action_shoppinglistFragment_to_addDialogFragment"
+            app:destination="@id/addDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/containerProductFragment"
+        android:name="com.utn.primerparcial.fragments.ContainerProductFragment"
+        android:label="fragment_container_product"
+        tools:layout="@layout/fragment_container_product" >
+        <argument
+            android:name="selectedProductId"
+            app:argType="integer" />
+        <argument
+            android:name="currentUserId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/addDialogFragment"
+        android:name="com.utn.primerparcial.fragments.AddDialogFragment"
+        android:label="fragment_add_dialog"
+        tools:layout="@layout/fragment_add_dialog" >
+        <action
+            android:id="@+id/action_addDialogFragment_to_shoppinglistFragment"
+            app:destination="@id/shoppinglistFragment" />
+        <argument
+            android:name="currentUserId"
+            app:argType="integer" />
+        <argument
+            android:name="editProductId"
+            app:argType="integer" />
+    </fragment>
+</navigation>
