@@ -12,7 +12,8 @@
     <string name="area_code">Area</string>
     <string name="title_1">Shopping List</string>
     <string name="title_2">CREATE ACCOUNT</string>
-    <string name="title_3">Shopping List</string>
+    <string name="title_3a">Shopping List</string>
+    <string name="title_3b">Favorite List</string>
     <string name="title_4">Product Information</string>
     <string name="title_5">Similar Products</string>
     <string name="title_6">Products of the same Brand</string>
@@ -29,7 +30,7 @@
     <string name="fab_content_desc">Button to add product</string>
     <string name="product_name">Product Name</string>
     <string name="product_brand">Product Brand</string>
-    <string name="product_quantity">0</string>
+    <string name="product_quantity">1</string>
     <string name="but_accept">Add</string>
     <string name="but_cancel">Cancel</string>
     <string name="but_add">+</string>

@@ -39,7 +39,7 @@
         android:id="@+id/textTitle_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_3"
+        android:text="@string/title_3a"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
         app:layout_constraintEnd_toStartOf="@+id/guideline13"

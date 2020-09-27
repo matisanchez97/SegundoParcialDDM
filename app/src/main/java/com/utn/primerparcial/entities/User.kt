@@ -35,8 +35,8 @@ class User(id: Int,name: String, phone_number: String, birthday: LocalDate, user
     @ColumnInfo(name = "products")
     var shopping_list:MutableList<Product>
 
-    @Ignore
-    var favourite_products:MutableList<Product>
+    @ColumnInfo(name = "favorite")
+    var favorite_products:MutableList<Product>
 
     @Ignore
     constructor(parcel: Parcel) : this(
@@ -62,7 +62,7 @@ class User(id: Int,name: String, phone_number: String, birthday: LocalDate, user
         this.username = username
         this.password =  password
         this.shopping_list = ArrayList<Product>()
-        this.favourite_products = ArrayList<Product>()
+        this.favorite_products = ArrayList<Product>()
     }
 
     @Ignore

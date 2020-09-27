@@ -136,18 +136,6 @@ class AddDialogFragment() : Fragment() {
                     textProductNameList.text.toString(),
                     textProductBrandList.text.toString()
                 )
-                selectedProduct?.quantity = textEditProductQuantity.text.toString().toInt()
-                if (editProductPos != -1) {
-                    currentUser?.shopping_list?.removeAt(editProductPos)
-                }
-                    if (currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }!!) {
-                        val index = currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand }
-                        currentUser!!.shopping_list[index!!].quantity += selectedProduct!!.quantity
-                    } else if (editProductPos != -1)
-                        currentUser?.shopping_list?.add(editProductPos,selectedProduct!!)
-                    else
-                        currentUser?.shopping_list?.add(selectedProduct!!)
-                userDao?.updatePerson(currentUser)
             } else {
                 stringAux = textProductBrandList.text.toString().substringBefore(" x")
                 measureAux = textProductBrandList.text.toString().substringAfter(" x")
@@ -156,10 +144,19 @@ class AddDialogFragment() : Fragment() {
                     stringAux,
                     measureAux
                 )
-                selectedProduct?.quantity = textEditProductQuantity.text.toString().toInt()
-                currentUser?.shopping_list?.add(selectedProduct!!)
-                userDao?.updatePerson(currentUser)
             }
+            selectedProduct?.quantity = textEditProductQuantity.text.toString().toInt()
+            if (editProductPos != -1) {
+                currentUser?.shopping_list?.removeAt(editProductPos)
+            }
+            if (currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand && it.measure == selectedProduct?.measure}!!) {
+                val index = currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand && it.measure == selectedProduct?.measure}
+                currentUser!!.shopping_list[index!!].quantity += selectedProduct!!.quantity
+            } else if (editProductPos != -1)
+                currentUser?.shopping_list?.add(editProductPos,selectedProduct!!)
+            else
+                currentUser?.shopping_list?.add(selectedProduct!!)
+            userDao?.updatePerson(currentUser)
             val action_6 =
                 AddDialogFragmentDirections.actionAddDialogFragmentToShoppinglistFragment(
                     currentUserId

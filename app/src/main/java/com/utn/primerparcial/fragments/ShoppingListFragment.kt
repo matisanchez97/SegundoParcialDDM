@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.view.ActionMode
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +23,7 @@ import com.utn.primerparcial.database.userDao
 import com.utn.primerparcial.entities.Product
 import com.utn.primerparcial.entities.User
 import com.wajahatkarim3.roomexplorer.RoomExplorer.show
+import kotlinx.android.synthetic.main.fragment_shopping_list.*
 
 
 /**
@@ -33,18 +35,23 @@ class ShoppingListFragment : Fragment() {
     lateinit var v: View
     lateinit var recyclerProducts: RecyclerView
     lateinit var linearLayoutManager: LinearLayoutManager
-    lateinit var shoppingListAdapter: ShoppingListAdapter
-    lateinit var selectedProduct: Product
     lateinit var butFloatAdd: FloatingActionButton
     lateinit var mainLayout: ConstraintLayout
+    lateinit var textTitle: TextView
+
+    lateinit var shoppingListAdapter: ShoppingListAdapter
+    lateinit var favoriteListAdapter: ShoppingListAdapter
+    lateinit var selectedProduct: Product
 
     var currentUserId: Int = 0
     var editProductPos: Int = 0
     var currentUser: User? = null
     var shoppingList: MutableList<Product>? = ArrayList<Product>()
+    var favoriteList: MutableList<Product>? = ArrayList<Product>()
     var selectedProducts: MutableList<Product>? = ArrayList<Product>()
     var selectedCards: MutableList<CardView>? = ArrayList<CardView>()
     var actionMode : ActionMode? = null
+    var favMenu = false
 
     private var db: appDatabase? = null
     private var userDao: userDao? = null
@@ -73,14 +80,19 @@ class ShoppingListFragment : Fragment() {
                 return when (item?.itemId) {
                     R.id.edit -> {
                         // Handle share icon press
-                        if (selectedProducts!!.size == 1){
-                            editProductPos = shoppingList!!.indexOf(selectedProducts!![0])
-                            val action_7 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,editProductPos,-1)
-                            actionMode?.finish()
-                            findNavController().navigate(action_7)
+                        if (favMenu)
+                            Snackbar.make(mainLayout,"You cant edit in Favorite List", Snackbar.LENGTH_SHORT).show()
+                        else {
+                            if (selectedProducts!!.size == 1){
+                                editProductPos = shoppingList!!.indexOf(selectedProducts!![0])
+                                val action_7 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,editProductPos,-1)
+                                actionMode?.finish()
+                                findNavController().navigate(action_7)
+                            }
+                            else
+                                Snackbar.make(mainLayout,"Please select only 1 product to edit", Snackbar.LENGTH_SHORT).show()
+                        
                         }
-                        else
-                            Snackbar.make(mainLayout,"Please select only 1 product to edit", Snackbar.LENGTH_SHORT).show()
                         true
                     }
                     R.id.delete -> {
@@ -113,9 +125,21 @@ class ShoppingListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = when(item.itemId) {
 
-            R.id.favorite ->""
+            R.id.favorite ->{if (favMenu) {
+                shoppingList = currentUser?.shopping_list
+                favoriteListAdapter = ShoppingListAdapter(shoppingList!!, { position, cardView -> OnItemClick(position, cardView) }, { position, cardView -> OnItemLongClick(position, cardView) })
+                recyclerProducts.adapter = shoppingListAdapter
+                textTitle_3.text = getString(R.string.title_3a)
+                favMenu = false
+            }else{
+                shoppingList = currentUser?.favorite_products
+                favoriteListAdapter = ShoppingListAdapter(shoppingList!!, { position, cardView -> OnItemClick(position, cardView) }, { position, cardView -> OnItemLongClick(position, cardView) })
+                recyclerProducts.adapter = favoriteListAdapter
+                textTitle_3.text = getString(R.string.title_3b)
+                favMenu = true
+            }
 
-            R.id.search ->""
+            }
 
             R.id.more -> {
                 val action_8 = ShoppingListFragmentDirections.actionShoppinglistFragmentToSettingsActivity()
@@ -137,6 +161,7 @@ class ShoppingListFragment : Fragment() {
         recyclerProducts = v.findViewById(R.id.recyclerProducts)
         butFloatAdd = v.findViewById(R.id.floating_action_button)
         mainLayout = v.findViewById(R.id.welcomeLayout)
+        textTitle = v.findViewById(R.id.textTitle_3)
         setHasOptionsMenu(true)
 
         return v
@@ -154,6 +179,8 @@ class ShoppingListFragment : Fragment() {
         recyclerProducts.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerProducts.layoutManager = linearLayoutManager
+
+
 
         if(!(shoppingList.isNullOrEmpty())){
             shoppingListAdapter = ShoppingListAdapter(shoppingList!!,{position,cardView -> OnItemClick(position,cardView)},{position,cardView -> OnItemLongClick(position,cardView)})
@@ -197,8 +224,9 @@ class ShoppingListFragment : Fragment() {
         selectedProducts?.add(shoppingList!![position])
         selectedCards?.add(cardView)
         cardView.setCardBackgroundColor(Color.parseColor("#d7263d"))
-        if(selectedProducts?.size == 1)
+        if(selectedProducts?.size == 1) {
             actionMode = (activity as MainActivity).startSupportActionMode(callback)
+        }
         actionMode?.title = selectedProducts?.size.toString() + " selected"
     }
 
