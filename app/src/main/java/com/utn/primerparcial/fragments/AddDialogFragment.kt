@@ -97,9 +97,7 @@ class AddDialogFragment() : Fragment() {
                 productListBrand.add(product.brand)
         }
         val adapterName = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListName)
-        val adapterBrand = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListBrand)
         textProductNameList.setAdapter(adapterName)
-        textProductBrandList.setAdapter(adapterBrand)
 
         if (editProductPos != -1) {
             butAccept.text = getString(R.string.edit)
@@ -116,18 +114,18 @@ class AddDialogFragment() : Fragment() {
         }
 
         textProductNameList.setOnItemClickListener { parent, view, position, id ->
-            productListAux.removeAll(productListAux)
+            productListBrand.removeAll(productListBrand)
             for (product in productDao?.loadProductsByName(productListName[position])!!) {
-                if (!(productListAux.contains(product.brand))) {
-                    productListAux.add(product.brand)
+                if (!(productListBrand.contains(product.brand))) {
+                    productListBrand.add(product.brand)
                     measureAux = product.measure
                 } else {
-                    productListAux[productListAux.size - 1] += " x" + measureAux
-                    productListAux.add(product.brand + " x" + product.measure)
+                    productListBrand[productListBrand.size - 1] += " x" + measureAux
+                    productListBrand.add(product.brand + " x" + product.measure)
                 }
             }
-            val adapterAux = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListAux)
-            textProductBrandList.setAdapter(adapterAux)
+            val adapterBrand = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListBrand)
+            textProductBrandList.setAdapter(adapterBrand)
         }
 
         butAccept.setOnClickListener {

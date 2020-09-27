@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.appcompat.view.ActionMode
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import com.utn.primerparcial.R
+import com.utn.primerparcial.constants.PRODUCT_IMAGE
 import com.utn.primerparcial.database.appDatabase
 import com.utn.primerparcial.database.productDao
 import com.utn.primerparcial.database.userDao
@@ -29,6 +31,7 @@ class DetailProductFragment() : Fragment() {
     lateinit var textPrdDesc: TextView
     lateinit var butAdd: Button
     lateinit var butFav: CheckBox
+    lateinit var imageProduct: ImageView
 
     var productId: Int = 0
     var currentUserId: Int = 0
@@ -52,6 +55,7 @@ class DetailProductFragment() : Fragment() {
         textPrdDesc = v.findViewById(R.id.textProductDesc)
         butAdd = v.findViewById(R.id.buttonAccept2)
         butFav = v.findViewById(R.id.buttonFav)
+        imageProduct = v.findViewById(R.id.imageProduct)
         return v
     }
 
@@ -68,6 +72,8 @@ class DetailProductFragment() : Fragment() {
         selectedProduct = productDao?.loadProductById(productId)
         productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
         textPrdDesc.text = productDes
+        imageProduct.setImageResource(PRODUCT_IMAGE[productId-1])
+
         if(currentUser?.favorite_products!!.contains(selectedProduct))
             butFav.setChecked(true)
         else

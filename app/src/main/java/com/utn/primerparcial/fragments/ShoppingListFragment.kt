@@ -91,7 +91,7 @@ class ShoppingListFragment : Fragment() {
                             }
                             else
                                 Snackbar.make(mainLayout,"Please select only 1 product to edit", Snackbar.LENGTH_SHORT).show()
-                        
+
                         }
                         true
                     }
@@ -125,20 +125,33 @@ class ShoppingListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = when(item.itemId) {
 
-            R.id.favorite ->{if (favMenu) {
-                shoppingList = currentUser?.shopping_list
-                favoriteListAdapter = ShoppingListAdapter(shoppingList!!, { position, cardView -> OnItemClick(position, cardView) }, { position, cardView -> OnItemLongClick(position, cardView) })
-                recyclerProducts.adapter = shoppingListAdapter
-                textTitle_3.text = getString(R.string.title_3a)
-                favMenu = false
-            }else{
-                shoppingList = currentUser?.favorite_products
-                favoriteListAdapter = ShoppingListAdapter(shoppingList!!, { position, cardView -> OnItemClick(position, cardView) }, { position, cardView -> OnItemLongClick(position, cardView) })
-                recyclerProducts.adapter = favoriteListAdapter
-                textTitle_3.text = getString(R.string.title_3b)
-                favMenu = true
+            R.id.favorite -> {
+                if (favMenu) {
+                    shoppingList = currentUser?.shopping_list
+                    favoriteListAdapter = ShoppingListAdapter(
+                        shoppingList!!,
+                        { position, cardView -> OnItemClick(position, cardView) },
+                        { position, cardView -> OnItemLongClick(position, cardView) })
+                    recyclerProducts.adapter = shoppingListAdapter
+                    textTitle_3.text = getString(R.string.title_3a)
+                    favMenu = false
+                } else {
+                    shoppingList = currentUser?.favorite_products
+                    favoriteListAdapter = ShoppingListAdapter(
+                        shoppingList!!,
+                        { position, cardView -> OnItemClick(position, cardView) },
+                        { position, cardView -> OnItemLongClick(position, cardView) })
+                    recyclerProducts.adapter = favoriteListAdapter
+                    textTitle_3.text = getString(R.string.title_3b)
+                    favMenu = true
+                }
             }
-
+            R.id.calculate ->{
+                var total_cost = 0
+                for (product in shoppingList!!){
+                    total_cost += product.price * product.quantity
+                }
+                Snackbar.make(mainLayout,"The Calculated cost is $" + total_cost.toString(), Snackbar.LENGTH_SHORT).show()
             }
 
             R.id.more -> {
