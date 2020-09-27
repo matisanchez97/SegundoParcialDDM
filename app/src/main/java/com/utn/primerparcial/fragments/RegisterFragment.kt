@@ -56,7 +56,7 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     var day = 0
     var month = 0
     var year = 0
-    var i = 1
+    var i = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,7 +90,7 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         userDao = db?.userDao()
         users = userDao?.loadAllPersons()!!
         if(users!=null)
-            i = users!!.size + 1
+            i = users!!.size
 
         butRegister2.setOnClickListener(){
             validationList = arrayListOf(textFieldUsr2,textFieldPass2,textFieldName,textFieldPhone,textFieldDate,textFieldArea)

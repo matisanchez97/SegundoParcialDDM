@@ -8,6 +8,7 @@ import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.utn.primerparcial.R
@@ -104,5 +105,14 @@ class LoginFragment : Fragment() {
                     textFieldPass.error = getString(R.string.error_msg)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val editor = prefs.edit()
+        editor.putString("first_name", "")
+        editor.putString("password", "")
+        editor.apply()
     }
 }

@@ -57,8 +57,8 @@ class ShoppingListAdapter (private var shoppingList: MutableList<Product>, val o
             true
         }
         holder.setQuantity(shoppingList[position].quantity.toString())
-
-        if(shoppingList[position].name.startsWith(PRODUCT_CODES[0]))
+        holder.getImageView().setImageResource(shoppingList[position].imageResId)
+        /*if(shoppingList[position].name.startsWith(PRODUCT_CODES[0]))
             holder.getImageView().setImageResource(R.drawable.ic_milk_bottle)
         else if (shoppingList[position].name.startsWith(PRODUCT_CODES[1]))
             holder.getImageView().setImageResource(R.drawable.ic_cheese)
@@ -67,7 +67,7 @@ class ShoppingListAdapter (private var shoppingList: MutableList<Product>, val o
         else if (shoppingList[position].name.startsWith(PRODUCT_CODES[3]))
             holder.getImageView().setImageResource(R.drawable.ic_beer)
         else if (shoppingList[position].name.startsWith(PRODUCT_CODES[4]))
-            holder.getImageView().setImageResource(R.drawable.ic_dulce_de_leche)
+            holder.getImageView().setImageResource(R.drawable.ic_dulce_de_leche)*/
 
 
     }

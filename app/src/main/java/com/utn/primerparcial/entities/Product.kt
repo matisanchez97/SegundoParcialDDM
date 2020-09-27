@@ -8,7 +8,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "products")
-class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measure:String) {
+class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measure:String,imageResId:Int) {
     @PrimaryKey
     @ColumnInfo(name = "id")
     var id: Int
@@ -22,6 +22,8 @@ class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measur
     var quantity: Int
     @ColumnInfo(name = "measure")
     var measure: String
+    @ColumnInfo(name = "resource id")
+    var imageResId: Int
 
 
 
@@ -32,6 +34,7 @@ class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measur
         this.price = price
         this.quantity = quantity
         this.measure = measure
+        this.imageResId = imageResId
     }
 
     override fun equals(other: Any?): Boolean {

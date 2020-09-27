@@ -85,5 +85,9 @@ class SimilarProductFragment() : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        onStart()
+    }
 
 }

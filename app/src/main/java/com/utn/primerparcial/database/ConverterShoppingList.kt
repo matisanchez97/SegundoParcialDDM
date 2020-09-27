@@ -13,7 +13,7 @@ class ConverterShoppingList {
             var acc: String = ""
             if(value.isNotEmpty()) {
                 for (product in value) {
-                    acc += product.id.toString() + "-" + product.name + "-" + product.brand + "-" + product.price.toString() + "-" + product.quantity.toString() + "-" + product.measure + "-/"
+                    acc += product.id.toString() + "-" + product.name + "-" + product.brand + "-" + product.price.toString() + "-" + product.quantity.toString() + "-" + product.measure + "-" + product.imageResId.toString() + "-/"
                 }
             }
             return acc
@@ -22,7 +22,7 @@ class ConverterShoppingList {
         @TypeConverter
         @JvmStatic
         fun toShoppingList(value: String): MutableList<Product> {
-            var productArgs:Array<String?> = arrayOfNulls<String>(6)
+            var productArgs:Array<String?> = arrayOfNulls<String>(7)
             var ShoppingList: MutableList<Product> = ArrayList<Product>()
             var aux1: String
             var aux2: String
@@ -41,7 +41,7 @@ class ConverterShoppingList {
                     i++
                 }
                 i = 0
-                ShoppingList.add(Product(productArgs[0]!!.toInt(),productArgs[1]!!,productArgs[2]!!,productArgs[3]!!.toInt(),productArgs[4]!!.toInt(),productArgs[5]!!))
+                ShoppingList.add(Product(productArgs[0]!!.toInt(),productArgs[1]!!,productArgs[2]!!,productArgs[3]!!.toInt(),productArgs[4]!!.toInt(),productArgs[5]!!,productArgs[6]!!.toInt()))
                 aux2 = aux1.substringBefore("/")
             }
             return ShoppingList

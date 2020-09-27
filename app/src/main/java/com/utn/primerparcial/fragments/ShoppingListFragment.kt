@@ -8,8 +8,10 @@ import android.widget.TextView
 import androidx.appcompat.view.ActionMode
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -42,12 +44,13 @@ class ShoppingListFragment : Fragment() {
     lateinit var shoppingListAdapter: ShoppingListAdapter
     lateinit var favoriteListAdapter: ShoppingListAdapter
     lateinit var selectedProduct: Product
+    lateinit var settingName: String
+    lateinit var settingPassword: String
 
     var currentUserId: Int = 0
     var editProductPos: Int = 0
     var currentUser: User? = null
     var shoppingList: MutableList<Product>? = ArrayList<Product>()
-    var favoriteList: MutableList<Product>? = ArrayList<Product>()
     var selectedProducts: MutableList<Product>? = ArrayList<Product>()
     var selectedCards: MutableList<CardView>? = ArrayList<CardView>()
     var actionMode : ActionMode? = null
@@ -56,6 +59,7 @@ class ShoppingListFragment : Fragment() {
     private var db: appDatabase? = null
     private var userDao: userDao? = null
     private var productDao: productDao? = null
+    private var sortingOrder = 0
     private lateinit var callback : ActionMode.Callback
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -182,23 +186,48 @@ class ShoppingListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val editor = prefs.edit()
+
         (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
         db = appDatabase.getAppDataBase(v.context)
         userDao = db?.userDao()
         productDao = db?.productDao()
         currentUserId = ShoppingListFragmentArgs.fromBundle(requireArguments()).loggedUserId
         currentUser = userDao?.loadPersonById(currentUserId)
-        shoppingList = currentUser?.shopping_list
+
+        sortingOrder = prefs.getString("sort","0")!!.toInt()
+        settingName = prefs.getString("first_name", currentUser?.name)!!
+        settingPassword = prefs.getString("password", currentUser?.password)!!
+        if (settingName.isEmpty()) {
+            editor.putString("first_name", currentUser?.name)
+            settingName = currentUser!!.name
+        }
+        if (settingPassword.isEmpty()) {
+            editor.putString("password", currentUser?.password)
+            settingPassword = currentUser!!.password
+        }
+        editor.apply()
+        if (currentUser?.name != settingName)
+            currentUser?.name = settingName
+        if (currentUser?.password != settingPassword)
+            currentUser?.password = settingPassword
+        userDao?.updatePerson(currentUser)
+
+        /*shoppingList = currentUser?.shopping_list
+        when(sortingOrder){
+            1 ->
+                shoppingList!!.sortBy { it.id }
+            2 ->
+                shoppingList!!.sortBy { it.price }
+            else -> ""
+        }*/
         recyclerProducts.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerProducts.layoutManager = linearLayoutManager
+        shoppingListAdapter = ShoppingListAdapter(shoppingList!!,{position,cardView -> OnItemClick(position,cardView)},{position,cardView -> OnItemLongClick(position,cardView)})
+        recyclerProducts.adapter = shoppingListAdapter
 
-
-
-        if(!(shoppingList.isNullOrEmpty())){
-            shoppingListAdapter = ShoppingListAdapter(shoppingList!!,{position,cardView -> OnItemClick(position,cardView)},{position,cardView -> OnItemLongClick(position,cardView)})
-            recyclerProducts.adapter = shoppingListAdapter
-        }
 
         butFloatAdd.setOnClickListener {
             val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
@@ -207,16 +236,15 @@ class ShoppingListFragment : Fragment() {
 
     }
 
-
     fun OnItemClick(position: Int,cardView: CardView){
-        if(selectedProducts!!.isEmpty()) {
-            selectedProduct = shoppingList!![position]
+        if(selectedProducts!!.isEmpty()) {              //Si no estamos en el Contextual Toolbar
+            selectedProduct = shoppingList!![position]  //Me voy para el DetailFragment
             val action_4 = ShoppingListFragmentDirections.actionShoppinglistFragmentToContainerProductFragment(selectedProduct.id, currentUserId)
             findNavController().navigate(action_4)
         }
         else{
-            if(selectedProducts!!.contains(shoppingList!![position])){
-                selectedProducts!!.remove(shoppingList!![position])
+            if(selectedProducts!!.contains(shoppingList!![position])){  //Si estamos en el Contextual Toolbar
+                selectedProducts!!.remove(shoppingList!![position])     //Y el producto ya esta seleccionado
                 selectedCards!!.remove(cardView)
                 cardView.setCardBackgroundColor(Color.parseColor("#ffffff"))
                 if(selectedProducts?.size == 0)
@@ -224,26 +252,21 @@ class ShoppingListFragment : Fragment() {
                 actionMode?.title = selectedProducts?.size.toString() + " selected"
             }
             else {
-                selectedProducts?.add(shoppingList!![position])
-                selectedCards?.add(cardView)
-                cardView.setCardBackgroundColor(Color.parseColor("#d7263d"))
+                selectedProducts?.add(shoppingList!![position])   //Si estamos en el Contextual Toolbar
+                selectedCards?.add(cardView)                      //Y el producto no esta seleccionado
+                cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorAccent))
                 actionMode?.title = selectedProducts?.size.toString() + " selected"
             }
-
         }
     }
 
     fun OnItemLongClick(position: Int,cardView: CardView){
         selectedProducts?.add(shoppingList!![position])
         selectedCards?.add(cardView)
-        cardView.setCardBackgroundColor(Color.parseColor("#d7263d"))
+        cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(),R.color.colorAccent))
         if(selectedProducts?.size == 1) {
             actionMode = (activity as MainActivity).startSupportActionMode(callback)
         }
         actionMode?.title = selectedProducts?.size.toString() + " selected"
     }
-
-
-
-
 }

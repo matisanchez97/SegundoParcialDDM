@@ -81,6 +81,11 @@ class BrandProductFragment() : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        onStart()
+    }
+
 
 
 

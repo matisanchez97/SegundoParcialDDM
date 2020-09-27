@@ -1,19 +1,30 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="Profile">
 
         <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+            android:id="@+id/first_name"
+            android:iconSpaceReserved="true"
+            app:key="first_name"
+            app:title="First Name"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+        <EditTextPreference
+            android:id="@+id/password"
+            app:key="password"
+            app:title="Password"
             app:useSimpleSummaryProvider="true" />
+<PreferenceCategory app:title="Shopping List">
+    <ListPreference
+        app:defaultValue= "0"
+        app:entries="@array/Sort_entries"
+        app:entryValues="@array/Sort_values"
+        app:key="sort"
+        app:title="Default sorting mode"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceCategory>
+
 
     </PreferenceCategory>
 
