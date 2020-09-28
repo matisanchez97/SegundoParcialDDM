@@ -36,7 +36,7 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     lateinit var textFieldPhone: TextInputLayout
     lateinit var textFieldDate: TextInputLayout
     lateinit var textFieldArea: TextInputLayout
-    lateinit var textEditDate: AutoCompleteTextView
+    lateinit var textEditDate: AutoCompleteTextView     //AutoCompleteView para que sea como un textView, pero con la misma aperiencia del resto d elos campos
     lateinit var textListArea: AutoCompleteTextView
     lateinit var validationList: MutableList<TextInputLayout>
     lateinit var butRegister2: Button
@@ -77,15 +77,15 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         return v
     }
 
-    override fun onDateSet(view: DatePicker?, year: Int,month:Int,day:Int) {
-        birthDate = LocalDate.of(year,month+1,day)
+    override fun onDateSet(view: DatePicker?, year: Int,month:Int,day:Int) {        //Cuando se setea la fecha del datepicker, creo una variable del tipo localdate
+        birthDate = LocalDate.of(year,month+1,day)                          //Y la cargo en el View
         textEditDate.setText(birthDate.toString())
     }
 
     override fun onStart() {
         super.onStart()
-        val adapter = ArrayAdapter<String>(requireContext(),R.layout.area_item, AREA_CODES)
-        textListArea.setAdapter(adapter)
+        val adapter = ArrayAdapter<String>(requireContext(),R.layout.area_item, AREA_CODES)     //Creo un adaptador para el AutoCompleteTextView del las areas
+        textListArea.setAdapter(adapter)                                                        //A partir de los valores constantes definidos
         db = appDatabase.getAppDataBase(v.context)
         userDao = db?.userDao()
         users = userDao?.loadAllPersons()!!
@@ -94,8 +94,8 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
 
         butRegister2.setOnClickListener(){
             validationList = arrayListOf(textFieldUsr2,textFieldPass2,textFieldName,textFieldPhone,textFieldDate,textFieldArea)
-            for(textField in validationList){
-                if (textField.editText!!.text.isBlank())
+            for(textField in validationList){               //Creo una lista text inputlayout, para verificar que esten todas completas
+                if (textField.editText!!.text.isBlank())    //Si no lo estan envio un mensaje de error
                 {
                     isValid = false
                     textField.error = getString(R.string.error_msg)
@@ -105,14 +105,14 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
             password = textFieldPass2.editText!!.text.toString()
             firstname = textFieldName.editText!!.text.toString()
             phone = textFieldArea.editText!!.text.toString() + textFieldPhone.editText!!.text.toString()
-            for (user in users!!){
+            for (user in users!!){                          //Chequeo si el usuario ya existe, para que no se creen dos usuarios iguales
                 if(user.checkUsername(username))
                 {
                     isValid = false
                     textFieldUsr2.error = getString(R.string.error_msg_usr_2)
                 }
             }
-            if (isValid){
+            if (isValid){                                  //Si pasa todos los chequeos de validez, creo el nuevo usuario
                 newUser = User(i,firstname,phone,birthDate,username,password)
                 i++
                 userDao?.insertPerson(newUser)
@@ -123,8 +123,8 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                 isValid = true
         }
 
-        textFieldDate.editText!!.setOnClickListener(){
-            val calendar: Calendar = Calendar.getInstance()
+        textFieldDate.editText!!.setOnClickListener(){          //Si hago click en el campo birthday, primero cargo el dia de hoy en variables
+            val calendar: Calendar = Calendar.getInstance()     //Y luego ejecuto el dialog del date picker
             day = calendar.get(Calendar.DAY_OF_MONTH)
             month = calendar.get(Calendar.MONTH)
             year = calendar.get(Calendar.YEAR)

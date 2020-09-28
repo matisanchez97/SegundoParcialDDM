@@ -64,12 +64,12 @@ class ShoppingListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(true)     //Activo las opciones del toolbar
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.top_app_bar, menu)
-        callback = object : ActionMode.Callback {
+        callback = object : ActionMode.Callback {           //Creo el AcrionMode para la contextual toolbar
 
             override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
                 inflater.inflate(R.menu.contextual_action_bar, menu)
@@ -81,9 +81,8 @@ class ShoppingListFragment : Fragment() {
             }
 
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-                return when (item?.itemId) {
+                return when (item?.itemId) {        //Defino el comportamiento de los items de la contextual toolbar
                     R.id.edit -> {
-                        // Handle share icon press
                         if (favMenu)
                             Snackbar.make(mainLayout,"You cant edit in Favorite List", Snackbar.LENGTH_SHORT).show()
                         else {
@@ -100,7 +99,6 @@ class ShoppingListFragment : Fragment() {
                         true
                     }
                     R.id.delete -> {
-                        // Handle delete icon press
                         shoppingList?.removeAll(selectedProducts as Collection<Product>)
                         userDao?.updatePerson(currentUser)
                         actionMode?.finish()
@@ -108,7 +106,6 @@ class ShoppingListFragment : Fragment() {
                         true
                     }
                     R.id.more -> {
-                        // Handle more item (inside overflow menu) press
                         true
                     }
                     else -> false
@@ -128,7 +125,6 @@ class ShoppingListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = when(item.itemId) {
-
             R.id.favorite -> {
                 if (favMenu) {
                     shoppingList = currentUser?.shopping_list
@@ -157,15 +153,12 @@ class ShoppingListFragment : Fragment() {
                 }
                 Snackbar.make(mainLayout,"The Calculated cost is $" + total_cost.toString(), Snackbar.LENGTH_SHORT).show()
             }
-
             R.id.more -> {
                 val action_8 = ShoppingListFragmentDirections.actionShoppinglistFragmentToSettingsActivity()
                 findNavController().navigate(action_8)
             }
-
             else -> ""
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -180,7 +173,6 @@ class ShoppingListFragment : Fragment() {
         mainLayout = v.findViewById(R.id.welcomeLayout)
         textTitle = v.findViewById(R.id.textTitle_3)
         setHasOptionsMenu(true)
-
         return v
     }
 
@@ -213,27 +205,24 @@ class ShoppingListFragment : Fragment() {
         if (currentUser?.password != settingPassword)
             currentUser?.password = settingPassword
         userDao?.updatePerson(currentUser)
-
-        /*shoppingList = currentUser?.shopping_list
+        shoppingList = currentUser?.shopping_list
         when(sortingOrder){
             1 ->
                 shoppingList!!.sortBy { it.id }
             2 ->
                 shoppingList!!.sortBy { it.price }
             else -> ""
-        }*/
+        }
         recyclerProducts.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerProducts.layoutManager = linearLayoutManager
         shoppingListAdapter = ShoppingListAdapter(shoppingList!!,{position,cardView -> OnItemClick(position,cardView)},{position,cardView -> OnItemLongClick(position,cardView)})
         recyclerProducts.adapter = shoppingListAdapter
 
-
         butFloatAdd.setOnClickListener {
             val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
             findNavController().navigate(action_5)
         }
-
     }
 
     fun OnItemClick(position: Int,cardView: CardView){

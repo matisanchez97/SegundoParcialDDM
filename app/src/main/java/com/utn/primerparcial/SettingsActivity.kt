@@ -41,19 +41,6 @@ class SettingsActivity : AppCompatActivity() {
         onBackPressed()
         return super.onSupportNavigateUp()
     }
-    override fun onStart() {
-        super.onStart()
-        db = appDatabase.getAppDataBase(this)
-        userDao = db?.userDao()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val sharedPref: SharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        val editor = prefs.edit()
-        val currentUserId = sharedPref.getInt("CURRENT_USER_ID",-1)
-        currentUser = userDao?.loadPersonById(currentUserId)
-        editor.putString("first_name",currentUser!!.name)
-        editor.putString("password",currentUser!!.password)
-        editor.apply()
-    }
 
 
     class SettingsFragment : PreferenceFragmentCompat() {

@@ -40,7 +40,7 @@ class LoginFragment : Fragment() {
     private var userDao: userDao? = null
     private var productDao: productDao? = null
     var users: MutableList<User>? = ArrayList<User>()
-    var userLogged = false
+    var userFound = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,11 +61,10 @@ class LoginFragment : Fragment() {
         db = appDatabase.getAppDataBase(v.context)
         userDao = db?.userDao()
         productDao = db?.productDao()
-        productDao?.insertMultipleProduct(PRODUCTS_LIST.toMutableList())
-        userDao?.insertPerson(User("debug","1234"))
-        userDao?.insertPerson(User(1,"Matias","+541130049144", LocalDate.of(1997,9,5), "matute","1234"))
+        productDao?.insertMultipleProduct(PRODUCTS_LIST.toMutableList())    //Cargo las constantes en la base de datos
+        userDao?.insertPerson(User("debug","1234"))     //Genero el usuario de debug
         users = userDao?.loadAllPersons()
-        userLogged = false
+        userFound = false
 
         butRegister.setOnClickListener {
             val action_1 = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
@@ -76,29 +75,29 @@ class LoginFragment : Fragment() {
             inputUser = User(textFieldUsr.editText!!.text.toString(), textFieldPass.editText!!.text.toString())
             textFieldUsr.error = null
             textFieldPass.error =null
-            if(inputUser.username.isNotBlank() && inputUser.password.isNotBlank()){
+            if(inputUser.username.isNotBlank() && inputUser.password.isNotBlank()){     //Si los dos campos estan completos
                 for (user in users!!)  {
-                    if(user.checkUsername(inputUser.username)){
-                        if (user.checkPassword(inputUser.password)){
-                            if(inputUser.checkUsername("debug"))
+                    if(user.checkUsername(inputUser.username)){                         //Chequeo si el usuario de la base de datos tiene ese nombre
+                        userFound = true
+                        if (user.checkPassword(inputUser.password)){                    //Cuando encuentro uno chqueo si tiene la contraseña ingresada
+                            if(inputUser.checkUsername("debug"))              //Si el usuario es el de debug, empiezo el RoomExplorer
                                 RoomExplorer.show(context, appDatabase::class.java, "myDB")
-                            else{
+                            else{                                                       //Sino voy a la Pantalla Principal
                                 Snackbar.make(loginLayout,"Welcome " + user.name.toString(), Snackbar.LENGTH_SHORT).show()
                                 val action_2 = LoginFragmentDirections.actionLoginFragmentToWelcomeFragment(user.id)
                                 v.findNavController().navigate(action_2)
                             }
-                            userLogged = true
                         }
-                        else{
+                        else{                                                           //Si la contraseña es incorrecta, devuelvo un mensaje de error
                             textFieldPass.error = getString(R.string.error_msg_pass)
                             break
                         }
                     }
                 }
-                if(!userLogged)
+                if(!userFound)                                                          //Si no encuentro usuario, devuelvo un mensaje de error
                     textFieldUsr.error = getString(R.string.error_msg_usr_1)
             }
-            else{
+            else{                                                                       //Si alguno de los campos esta vacion, devuelvo un mensaje de error
                 if (inputUser.username.isBlank())
                     textFieldUsr.error = getString(R.string.error_msg)
                 if (inputUser.password.isBlank())

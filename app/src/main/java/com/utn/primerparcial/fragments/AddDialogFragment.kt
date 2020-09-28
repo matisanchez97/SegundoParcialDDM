@@ -37,13 +37,18 @@ class AddDialogFragment() : Fragment() {
     lateinit var textEditProductQuantity: AutoCompleteTextView
     lateinit var textProductNameList: AutoCompleteTextView
     lateinit var textProductBrandList: AutoCompleteTextView
+    lateinit var textFieldQuantity: TextInputLayout
+    lateinit var textFieldName: TextInputLayout
+    lateinit var textFieldBrand: TextInputLayout
     lateinit var butAccept: Button
     lateinit var butCancel: Button
     lateinit var butAdd: Button
     lateinit var butSust: Button
+
     var productListName: MutableList<String> = ArrayList<String>()
     var productListBrand: MutableList<String> = ArrayList<String>()
     var productListAux: MutableList<String> = ArrayList<String>()
+    var isValid = true
     var measureAux: String = ""
     var selectedProduct: Product? = null
     var currentUser: User? = null
@@ -66,6 +71,9 @@ class AddDialogFragment() : Fragment() {
         textEditProductQuantity = v.findViewById(R.id.textEditQuantity)
         textProductBrandList = v.findViewById(R.id.textEditProductBrand)
         textProductNameList = v.findViewById(R.id.textEditProductName)
+        textFieldQuantity = v.findViewById(R.id.textFieldQuantity)
+        textFieldBrand = v.findViewById(R.id.textProductBrand)
+        textFieldName = v.findViewById(R.id.textProductName)
         butAdd = v.findViewById(R.id.buttonAdd)
         butSust = v.findViewById(R.id.buttonSust)
         butAccept = v.findViewById(R.id.buttonAccept)
@@ -80,15 +88,19 @@ class AddDialogFragment() : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        currentUserId = AddDialogFragmentArgs.fromBundle(requireArguments()).currentUserId
-        editProductPos = AddDialogFragmentArgs.fromBundle(requireArguments()).editProductId
-        newProductId = AddDialogFragmentArgs.fromBundle(requireArguments()).newProductId
+        currentUserId = AddDialogFragmentArgs.fromBundle(requireArguments()).currentUserId      //Si editProductId = -1 y newProduct = -1, el usuario quiere agregar cualquier prod
+        editProductPos = AddDialogFragmentArgs.fromBundle(requireArguments()).editProductId     //Si editProductId != -1 el usuario quiere editar un producto
+        newProductId = AddDialogFragmentArgs.fromBundle(requireArguments()).newProductId        //Si newProductId != -1 el usuario quiere agregar un producto especifico
         db = appDatabase.getAppDataBase(v.context)
         productDao = db?.productDao()
         userDao = db?.userDao()
         currentUser = userDao?.loadPersonById(currentUserId)
 
-        (activity as MainActivity).supportActionBar?.title = getString(R.string.title_7)
+        if (editProductPos != -1)
+            (activity as MainActivity).supportActionBar?.title = getString(R.string.title_8)
+        else
+            (activity as MainActivity).supportActionBar?.title = getString(R.string.title_7)
+
 
         for (product in productDao?.loadAllProducts()!!) {
             if (!(productListName.contains(product.name)))
@@ -99,8 +111,8 @@ class AddDialogFragment() : Fragment() {
         val adapterName = ArrayAdapter<String>(requireContext(), R.layout.area_item, productListName)
         textProductNameList.setAdapter(adapterName)
 
-        if (editProductPos != -1) {
-            butAccept.text = getString(R.string.edit)
+        if (editProductPos != -1) {                                                 //Si se quiere editar un producto, se carga el producto
+            butAccept.text = getString(R.string.edit)                                                 //a editar en las views
             editProduct = currentUser!!.shopping_list[editProductPos]
             textProductNameList.setText(editProduct!!.name, false)
             textProductBrandList.setText(editProduct!!.brand, false)
@@ -113,11 +125,11 @@ class AddDialogFragment() : Fragment() {
             textProductBrandList.setText(newProduct!!.brand, false)
         }
 
-        textProductNameList.setOnItemClickListener { parent, view, position, id ->
-            productListBrand.removeAll(productListBrand)
-            for (product in productDao?.loadProductsByName(productListName[position])!!) {
-                if (!(productListBrand.contains(product.brand))) {
-                    productListBrand.add(product.brand)
+        textProductNameList.setOnItemClickListener { parent, view, position, id ->              //Cuano se aprieta en un producto, qiuero que solo aparezcan las marcas de ese producto
+            productListBrand.removeAll(productListBrand)                                        //Primero borro la lista de marcas
+            for (product in productDao?.loadProductsByName(productListName[position])!!) {      //Para inicio un loop for para todos los productos del mismo nombre
+                if (!(productListBrand.contains(product.brand))) {                              //Como habia productos del mismo nombre y marca, pero distinta medida, tengo que diferenciarlos
+                    productListBrand.add(product.brand)                                         //Si tengo uno de estos casos, le cambio el nombre en la lista para distingirlos
                     measureAux = product.measure
                 } else {
                     productListBrand[productListBrand.size - 1] += " x" + measureAux
@@ -129,37 +141,50 @@ class AddDialogFragment() : Fragment() {
         }
 
         butAccept.setOnClickListener {
-            if ((!textProductBrandList.text.contains(" x"))) {
-                selectedProduct = productDao?.loadProductByNameAndBrand(
-                    textProductNameList.text.toString(),
-                    textProductBrandList.text.toString()
-                )
-            } else {
-                stringAux = textProductBrandList.text.toString().substringBefore(" x")
-                measureAux = textProductBrandList.text.toString().substringAfter(" x")
-                selectedProduct = productDao?.loadProductByNameAndBrandAndMeasure(
-                    textProductNameList.text.toString(),
-                    stringAux,
-                    measureAux
-                )
+            val validationList =
+                arrayListOf<TextInputLayout>(textFieldName, textFieldBrand, textFieldQuantity)
+
+            for (textField in validationList) {               //Creo una lista text inputlayout, para verificar que esten todas completas
+                if (textField.editText!!.text.isBlank()) {   //Si no lo estan envio un mensaje de error
+                    isValid = false
+                    textField.error = getString(R.string.error_msg)
+                }
             }
-            selectedProduct?.quantity = textEditProductQuantity.text.toString().toInt()
-            if (editProductPos != -1) {
-                currentUser?.shopping_list?.removeAt(editProductPos)
-            }
-            if (currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand && it.measure == selectedProduct?.measure}!!) {
-                val index = currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand && it.measure == selectedProduct?.measure}
-                currentUser!!.shopping_list[index!!].quantity += selectedProduct!!.quantity
-            } else if (editProductPos != -1)
-                currentUser?.shopping_list?.add(editProductPos,selectedProduct!!)
-            else
-                currentUser?.shopping_list?.add(selectedProduct!!)
-            userDao?.updatePerson(currentUser)
-            val action_6 =
-                AddDialogFragmentDirections.actionAddDialogFragmentToShoppinglistFragment(
-                    currentUserId
-                )
-            findNavController().navigate(action_6)
+            if (isValid) {
+                if ((!textProductBrandList.text.contains(" x"))) {          //Si el producto no tiene varias medidas, lo cargo por nombre y marca
+                    selectedProduct = productDao?.loadProductByNameAndBrand(
+                        textProductNameList.text.toString(),
+                        textProductBrandList.text.toString()
+                    )
+                } else {
+                    stringAux = textProductBrandList.text.toString()
+                        .substringBefore(" x")      //Si el producto tiene varias medidas, separo la medida y la marca
+                    measureAux = textProductBrandList.text.toString()
+                        .substringAfter(" x")      //Y lo cargo por nombre, marca y medida
+                    selectedProduct = productDao?.loadProductByNameAndBrandAndMeasure(
+                        textProductNameList.text.toString(),
+                        stringAux,
+                        measureAux
+                    )
+                }
+                selectedProduct?.quantity = textEditProductQuantity.text.toString()     //Le cargo la cantidad que ingrese
+                    .toInt()
+                if (editProductPos != -1) {
+                    currentUser?.shopping_list?.removeAt(editProductPos)                                //Si es un producto que edite, primero lo saco de la lista
+                }
+                if (currentUser?.shopping_list?.any { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand && it.measure == selectedProduct?.measure }!!) {                  //Chequeo si el producto ya existe en la shopping list
+                    val index =
+                        currentUser?.shopping_list?.indexOfFirst { it.name == selectedProduct?.name && it.brand == selectedProduct?.brand && it.measure == selectedProduct?.measure } //Tomo el indice en donde esta el producot
+                    currentUser!!.shopping_list[index!!].quantity += selectedProduct!!.quantity                                                                                              //Le sumo la cantidad que ingrese a la que ya tenia
+                } else if (editProductPos != -1)                                        //Si el producto no estaba en la lista y estoy editando, lo vuelvo a agregar en el lugar que estaba
+                    currentUser?.shopping_list?.add(editProductPos, selectedProduct!!)
+                else
+                    currentUser?.shopping_list?.add(selectedProduct!!)                 //Si el producto no estaba en la lista y estoy agregando, solo lo agrego a la lista
+                userDao?.updatePerson(currentUser)
+                val action_6 = AddDialogFragmentDirections.actionAddDialogFragmentToShoppinglistFragment(currentUserId)
+                findNavController().navigate(action_6)
+           } else
+                isValid = true
         }
 
         butCancel.setOnClickListener {
@@ -179,7 +204,7 @@ class AddDialogFragment() : Fragment() {
         butSust.setOnClickListener {
             var aux = 0
             aux = textEditProductQuantity.text.toString().toInt() - 1
-            if (aux >= 0)
+            if (aux > 0)
                 textEditProductQuantity.setText(aux.toString())
         }
     }
