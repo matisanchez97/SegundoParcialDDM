@@ -42,7 +42,6 @@ class ShoppingListFragment : Fragment() {
     lateinit var textTitle: TextView
 
     lateinit var shoppingListAdapter: ShoppingListAdapter
-    lateinit var favoriteListAdapter: ShoppingListAdapter
     lateinit var selectedProduct: Product
     lateinit var settingName: String
     lateinit var settingPassword: String
@@ -51,6 +50,7 @@ class ShoppingListFragment : Fragment() {
     var editProductPos: Int = 0
     var currentUser: User? = null
     var shoppingList: MutableList<Product>? = ArrayList<Product>()
+    var shoppingListaux: MutableList<Product>? = ArrayList<Product>()
     var selectedProducts: MutableList<Product>? = ArrayList<Product>()
     var selectedCards: MutableList<CardView>? = ArrayList<CardView>()
     var actionMode : ActionMode? = null
@@ -100,9 +100,13 @@ class ShoppingListFragment : Fragment() {
                     }
                     R.id.delete -> {
                         shoppingList?.removeAll(selectedProducts as Collection<Product>)
+                        if (favMenu)
+                            currentUser?.favorite_products = shoppingList!!.toMutableList()
+                        else
+                            currentUser?.shopping_list = shoppingList!!.toMutableList()
                         userDao?.updatePerson(currentUser)
                         actionMode?.finish()
-                        recyclerProducts.adapter = ShoppingListAdapter(shoppingList!!,{position,cardView -> OnItemClick(position,cardView)},{position,cardView -> OnItemLongClick(position,cardView)})
+                        recyclerProducts.adapter?.notifyDataSetChanged()
                         true
                     }
                     R.id.more -> {
@@ -127,21 +131,16 @@ class ShoppingListFragment : Fragment() {
         val id = when(item.itemId) {
             R.id.favorite -> {
                 if (favMenu) {
-                    shoppingList = currentUser?.shopping_list
-                    favoriteListAdapter = ShoppingListAdapter(
-                        shoppingList!!,
-                        { position, cardView -> OnItemClick(position, cardView) },
-                        { position, cardView -> OnItemLongClick(position, cardView) })
-                    recyclerProducts.adapter = shoppingListAdapter
+                    shoppingList?.removeAll(shoppingList!!)
+                    shoppingList?.addAll(shoppingListaux!!)
+                    recyclerProducts.adapter?.notifyDataSetChanged()
                     textTitle_3.text = getString(R.string.title_3a)
                     favMenu = false
                 } else {
-                    shoppingList = currentUser?.favorite_products
-                    favoriteListAdapter = ShoppingListAdapter(
-                        shoppingList!!,
-                        { position, cardView -> OnItemClick(position, cardView) },
-                        { position, cardView -> OnItemLongClick(position, cardView) })
-                    recyclerProducts.adapter = favoriteListAdapter
+                    shoppingListaux = shoppingList?.toMutableList()
+                    shoppingList?.removeAll(shoppingList!!)
+                    shoppingList?.addAll(currentUser!!.favorite_products)
+                    recyclerProducts.adapter?.notifyDataSetChanged()
                     textTitle_3.text = getString(R.string.title_3b)
                     favMenu = true
                 }
@@ -205,7 +204,8 @@ class ShoppingListFragment : Fragment() {
         if (currentUser?.password != settingPassword)
             currentUser?.password = settingPassword
         userDao?.updatePerson(currentUser)
-        shoppingList = currentUser?.shopping_list
+
+        shoppingList = currentUser?.shopping_list?.toMutableList()
         when(sortingOrder){
             1 ->
                 shoppingList!!.sortBy { it.id }
@@ -213,6 +213,7 @@ class ShoppingListFragment : Fragment() {
                 shoppingList!!.sortBy { it.price }
             else -> ""
         }
+
         recyclerProducts.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerProducts.layoutManager = linearLayoutManager
