@@ -87,7 +87,15 @@ class SimilarProductFragment() : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        onStart()
+        val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
+        selectedProduct = productDao?.loadProductById(productId)
+        similarProductList?.removeAll(similarProductList!!)
+        for(item in PRODUCT_CODES){
+            if(selectedProduct!!.name.startsWith(item))
+                similarProductList?.addAll(productDao?.loadSimilarProducts(item)!!)
+        }
+        recyclerSimilarProducts.adapter?.notifyDataSetChanged()
     }
 
 }

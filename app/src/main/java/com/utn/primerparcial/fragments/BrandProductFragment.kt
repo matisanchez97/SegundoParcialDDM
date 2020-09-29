@@ -83,7 +83,12 @@ class BrandProductFragment() : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        onStart()
+        val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
+        selectedProduct = productDao?.loadProductById(productId)
+        brandProductList?.removeAll(brandProductList!!)
+        brandProductList?.addAll(productDao?.loadProductsByBrand(selectedProduct?.brand)!!)
+        recyclerBrandProducts.adapter?.notifyDataSetChanged()
     }
 
 

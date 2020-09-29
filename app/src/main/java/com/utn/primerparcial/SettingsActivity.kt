@@ -15,16 +15,6 @@ import com.utn.primerparcial.entities.User
 
 class SettingsActivity : AppCompatActivity() {
 
-    lateinit var passwordValue: EditTextPreference
-    lateinit var firstnameValue: EditTextPreference
-
-    private var db: appDatabase? = null
-    private var userDao: userDao? = null
-    private val PREF_NAME = "myPreferences"
-    private var currentUser: User? = null
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -34,7 +24,7 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.settings)
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.settings, SettingsFragment())
+            .replace(R.id.settings_2, SettingsFragment())
             .commit()
     }
     override fun onSupportNavigateUp(): Boolean {

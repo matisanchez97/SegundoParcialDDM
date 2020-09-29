@@ -97,7 +97,18 @@ class DetailProductFragment() : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        onStart()
+        val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
+        selectedProduct = productDao?.loadProductById(productId)
+        productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
+        textPrdDesc.text = productDes
+        imageProduct.setImageResource(selectedProduct!!.imageResId)
+
+        if(currentUser?.favorite_products!!.contains(selectedProduct!!))
+            butFav.setChecked(true)
+        else
+            butFav.setChecked(false)
+
     }
 
 

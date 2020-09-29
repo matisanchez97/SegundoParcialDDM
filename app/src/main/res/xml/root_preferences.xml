@@ -15,32 +15,14 @@
             app:key="password"
             app:title="Password"
             app:useSimpleSummaryProvider="true" />
-<PreferenceCategory app:title="Shopping List">
-    <ListPreference
-        app:defaultValue= "0"
-        app:entries="@array/Sort_entries"
-        app:entryValues="@array/Sort_values"
-        app:key="sort"
-        app:title="Default sorting mode"
-        app:useSimpleSummaryProvider="true" />
-</PreferenceCategory>
-
-
     </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
+    <PreferenceCategory app:title="Shopping List">
+        <ListPreference
+            app:defaultValue= "0"
+            app:entries="@array/Sort_entries"
+            app:entryValues="@array/Sort_values"
+            app:key="sort"
+            app:title="Default sorting mode"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
-
 </PreferenceScreen>
