@@ -127,6 +127,7 @@ class AddDialogFragment() : Fragment() {
 
         textProductNameList.setOnItemClickListener { parent, view, position, id ->              //Cuano se aprieta en un producto, qiuero que solo aparezcan las marcas de ese producto
             productListBrand.removeAll(productListBrand)                                        //Primero borro la lista de marcas
+            textProductBrandList.text.clear()
             for (product in productDao?.loadProductsByName(productListName[position])!!) {      //Para inicio un loop for para todos los productos del mismo nombre
                 if (!(productListBrand.contains(product.brand))) {                              //Como habia productos del mismo nombre y marca, pero distinta medida, tengo que diferenciarlos
                     productListBrand.add(product.brand)                                         //Si tengo uno de estos casos, le cambio el nombre en la lista para distingirlos
