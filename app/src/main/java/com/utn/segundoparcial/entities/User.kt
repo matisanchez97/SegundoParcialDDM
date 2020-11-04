@@ -1,4 +1,4 @@
-package com.utn.primerparcial.entities
+package com.utn.segundoparcial.entities
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -6,7 +6,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.utn.primerparcial.constants.PRODUCTS_LIST
 import java.time.LocalDate
 
 @Entity(tableName = "users")

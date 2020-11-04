@@ -1,18 +1,14 @@
-package com.utn.primerparcial.adapters
+package com.utn.segundoparcial.adapters
 
-import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.utn.primerparcial.R
-import com.utn.primerparcial.constants.PRODUCT_CODES
-import com.utn.primerparcial.entities.Product
+import com.utn.segundoparcial.R
+import com.utn.segundoparcial.entities.Product
 
 class ShoppingListAdapter (private var shoppingList: MutableList<Product>, val onItemClick : (Int,CardView) -> Unit, val onItemLongClick : (Int,CardView) -> Unit) : RecyclerView.Adapter<ShoppingListAdapter.ShoppingListHolder>(){
     class ShoppingListHolder (v: View) : RecyclerView.ViewHolder(v){

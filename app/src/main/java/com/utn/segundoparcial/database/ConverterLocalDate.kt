@@ -1,4 +1,4 @@
-package com.utn.primerparcial.database
+package com.utn.segundoparcial.database
 
 import androidx.room.TypeConverter
 import java.time.LocalDate

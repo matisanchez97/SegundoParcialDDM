@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.utn.primerparcial.fragments.LoginFragment"
+        android:name="com.utn.segundoparcial.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.utn.primerparcial.fragments.RegisterFragment"
+        android:name="com.utn.segundoparcial.fragments.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/shoppinglistFragment"
-        android:name="com.utn.primerparcial.fragments.ShoppingListFragment"
+        android:name="com.utn.segundoparcial.fragments.ShoppingListFragment"
         android:label="fragment_shopping_list"
         tools:layout="@layout/fragment_shopping_list">
         <argument
@@ -46,7 +46,7 @@
     </fragment>
     <fragment
         android:id="@+id/containerProductFragment"
-        android:name="com.utn.primerparcial.fragments.ContainerProductFragment"
+        android:name="com.utn.segundoparcial.fragments.ContainerProductFragment"
         android:label="fragment_container_product"
         tools:layout="@layout/fragment_container_product" >
         <argument
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/addDialogFragment"
-        android:name="com.utn.primerparcial.fragments.AddDialogFragment"
+        android:name="com.utn.segundoparcial.fragments.AddDialogFragment"
         android:label="fragment_add_dialog"
         tools:layout="@layout/fragment_add_dialog" >
         <action
@@ -79,22 +79,22 @@
     </fragment>
     <fragment
         android:id="@+id/similarProductFragment"
-        android:name="com.utn.primerparcial.fragments.SimilarProductFragment"
+        android:name="com.utn.segundoparcial.fragments.SimilarProductFragment"
         android:label="fragment_similar_product"
         tools:layout="@layout/fragment_similar_product" />
     <fragment
         android:id="@+id/brandProductFragment"
-        android:name="com.utn.primerparcial.fragments.BrandProductFragment"
+        android:name="com.utn.segundoparcial.fragments.BrandProductFragment"
         android:label="fragment_brand_product"
         tools:layout="@layout/fragment_brand_product" />
     <fragment
         android:id="@+id/detailProductFragment"
-        android:name="com.utn.primerparcial.fragments.DetailProductFragment"
+        android:name="com.utn.segundoparcial.fragments.DetailProductFragment"
         android:label="fragment_detail_product"
         tools:layout="@layout/fragment_detail_product" />
     <activity
         android:id="@+id/settingsActivity"
-        android:name="com.utn.primerparcial.SettingsActivity"
+        android:name="com.utn.segundoparcial.SettingsActivity"
         android:label="activity_settings"
         tools:layout="@layout/activity_settings" />
 </navigation>

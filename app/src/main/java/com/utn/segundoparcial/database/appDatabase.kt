@@ -1,12 +1,12 @@
-package com.utn.primerparcial.database
+package com.utn.segundoparcial.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.utn.primerparcial.entities.Product
-import com.utn.primerparcial.entities.User
+import com.utn.segundoparcial.entities.Product
+import com.utn.segundoparcial.entities.User
 
 
 @Database(entities = [User::class, Product::class], version = 1, exportSchema = false)

@@ -1,6 +1,6 @@
-package com.utn.primerparcial.database
+package com.utn.segundoparcial.database
 
-import com.utn.primerparcial.entities.Product
+import com.utn.segundoparcial.entities.Product
 import androidx.room.*
 @Dao
 public interface productDao {

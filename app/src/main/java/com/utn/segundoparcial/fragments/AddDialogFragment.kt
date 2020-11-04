@@ -1,29 +1,20 @@
-package com.utn.primerparcial.fragments
+package com.utn.segundoparcial.fragments
 
-import android.app.AlertDialog
-import android.app.Dialog
-import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
-import com.utn.primerparcial.MainActivity
-import com.utn.primerparcial.R
-import com.utn.primerparcial.constants.AREA_CODES
-import com.utn.primerparcial.constants.PRODUCTS_LIST
-import com.utn.primerparcial.database.appDatabase
-import com.utn.primerparcial.database.productDao
-import com.utn.primerparcial.database.userDao
-import com.utn.primerparcial.entities.Product
-import com.utn.primerparcial.entities.User
-import java.net.UnknownServiceException
+import com.utn.segundoparcial.MainActivity
+import com.utn.segundoparcial.R
+import com.utn.segundoparcial.database.appDatabase
+import com.utn.segundoparcial.database.productDao
+import com.utn.segundoparcial.database.userDao
+import com.utn.segundoparcial.entities.Product
+import com.utn.segundoparcial.entities.User
 
 
 /**

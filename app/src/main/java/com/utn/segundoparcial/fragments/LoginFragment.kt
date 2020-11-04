@@ -1,4 +1,4 @@
-package com.utn.primerparcial.fragments
+package com.utn.segundoparcial.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,14 +11,13 @@ import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
-import com.utn.primerparcial.R
-import com.utn.primerparcial.constants.PRODUCTS_LIST
-import com.utn.primerparcial.database.appDatabase
-import com.utn.primerparcial.database.productDao
-import com.utn.primerparcial.database.userDao
-import com.utn.primerparcial.entities.User
+import com.utn.segundoparcial.R
+import com.utn.segundoparcial.constants.PRODUCTS_LIST
+import com.utn.segundoparcial.database.appDatabase
+import com.utn.segundoparcial.database.productDao
+import com.utn.segundoparcial.database.userDao
+import com.utn.segundoparcial.entities.User
 import com.wajahatkarim3.roomexplorer.RoomExplorer
-import java.time.LocalDate
 
 
 /**

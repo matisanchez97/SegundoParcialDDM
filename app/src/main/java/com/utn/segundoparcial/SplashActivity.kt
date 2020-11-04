@@ -1,4 +1,4 @@
-package com.utn.primerparcial
+package com.utn.segundoparcial
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

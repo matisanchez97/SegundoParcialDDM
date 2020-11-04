@@ -1,4 +1,4 @@
-package com.utn.primerparcial.fragments
+package com.utn.segundoparcial.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -12,13 +12,11 @@ import android.widget.DatePicker
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputLayout
-import com.utn.primerparcial.R
-import com.utn.primerparcial.constants.AREA_CODES
-import com.utn.primerparcial.constants.PRODUCTS_LIST
-import com.utn.primerparcial.database.appDatabase
-import com.utn.primerparcial.database.productDao
-import com.utn.primerparcial.database.userDao
-import com.utn.primerparcial.entities.User
+import com.utn.segundoparcial.R
+import com.utn.segundoparcial.constants.AREA_CODES
+import com.utn.segundoparcial.database.appDatabase
+import com.utn.segundoparcial.database.userDao
+import com.utn.segundoparcial.entities.User
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList

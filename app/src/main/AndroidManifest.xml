@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.utn.primerparcial">
+    package="com.utn.segundoparcial">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.utn.segundoparcial.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,13 +19,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.utn.segundoparcial.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
         -->
-        <activity android:name=".MainActivity">
+        <activity android:name="com.utn.segundoparcial.MainActivity">
         </activity>
     </application>
 

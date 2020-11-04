@@ -1,4 +1,4 @@
-package com.utn.primerparcial
+package com.utn.segundoparcial
 
 import org.junit.Test
 

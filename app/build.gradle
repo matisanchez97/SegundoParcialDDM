@@ -9,7 +9,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.utn.primerparcial"
+        applicationId "com.utn.segundoparcial"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1

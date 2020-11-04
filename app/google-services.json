@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1342219527",
+    "firebase_url": "https://segundoparcialddm-4ec7f.firebaseio.com",
+    "project_id": "segundoparcialddm-4ec7f",
+    "storage_bucket": "segundoparcialddm-4ec7f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1342219527:android:1d0c80a498fea5f0e051a2",
+        "android_client_info": {
+          "package_name": "com.ut.segundoparcial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1342219527-ebie7stu342ppgv35aej48oah9mbv0rh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBpLrhdsVI-Dcy8MTIGrYp1-COoZ81c_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1342219527-ebie7stu342ppgv35aej48oah9mbv0rh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

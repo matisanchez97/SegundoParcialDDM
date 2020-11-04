@@ -1,7 +1,7 @@
-package com.utn.primerparcial.database
+package com.utn.segundoparcial.database
 
 import androidx.room.*
-import com.utn.primerparcial.entities.User
+import com.utn.segundoparcial.entities.User
 
 @Dao
 public interface userDao {

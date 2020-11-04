@@ -1,9 +1,7 @@
-package com.utn.primerparcial.database
+package com.utn.segundoparcial.database
 
 import androidx.room.TypeConverter
-import com.utn.primerparcial.constants.PRODUCTS_LIST
-import com.utn.primerparcial.entities.Product
-import java.time.LocalDate
+import com.utn.segundoparcial.entities.Product
 
 class ConverterShoppingList {
     companion object{

@@ -1,6 +1,5 @@
-package com.utn.primerparcial.fragments
+package com.utn.segundoparcial.fragments
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -16,15 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.utn.primerparcial.MainActivity
-import com.utn.primerparcial.R
-import com.utn.primerparcial.adapters.ShoppingListAdapter
-import com.utn.primerparcial.database.appDatabase
-import com.utn.primerparcial.database.productDao
-import com.utn.primerparcial.database.userDao
-import com.utn.primerparcial.entities.Product
-import com.utn.primerparcial.entities.User
-import com.wajahatkarim3.roomexplorer.RoomExplorer.show
+import com.utn.segundoparcial.MainActivity
+import com.utn.segundoparcial.R
+import com.utn.segundoparcial.adapters.ShoppingListAdapter
+import com.utn.segundoparcial.database.appDatabase
+import com.utn.segundoparcial.database.productDao
+import com.utn.segundoparcial.database.userDao
+import com.utn.segundoparcial.entities.Product
+import com.utn.segundoparcial.entities.User
 import kotlinx.android.synthetic.main.fragment_shopping_list.*
 
 

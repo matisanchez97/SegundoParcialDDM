@@ -1,7 +1,7 @@
-package com.utn.primerparcial.constants
+package com.utn.segundoparcial.constants
 
-import com.utn.primerparcial.R
-import com.utn.primerparcial.entities.Product
+import com.utn.segundoparcial.R
+import com.utn.segundoparcial.entities.Product
 
 val PRODUCTS_LIST: List<Product> = listOf(
     Product(1,"Cerveza","Brahma",97,1,"970cc",R.drawable.cerveza_brahma_1lt),
