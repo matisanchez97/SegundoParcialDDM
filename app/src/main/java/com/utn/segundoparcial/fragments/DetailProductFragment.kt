@@ -10,12 +10,20 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.R
-import com.utn.segundoparcial.database.appDatabase
-import com.utn.segundoparcial.database.productDao
-import com.utn.segundoparcial.database.userDao
 import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.entities.User
+import com.utn.segundoparcial.framework.getProductByQuery
+import com.utn.segundoparcial.framework.getUserById
+import com.utn.segundoparcial.framework.updateProduct
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -29,6 +37,8 @@ class DetailProductFragment() : Fragment() {
     lateinit var butAdd: Button
     lateinit var butFav: CheckBox
     lateinit var imageProduct: ImageView
+    lateinit var favoritequery:Query
+
 
     var productId: Int = 0
     var currentUserId: Int = 0
@@ -39,10 +49,8 @@ class DetailProductFragment() : Fragment() {
     private val PREF_NAME = "myPreferences"
     private var editor: SharedPreferences.Editor? = null
 
-    private var db: appDatabase? = null
-    private var productDao: productDao? = null
-    private var userDao: userDao? = null
-
+    val db = Firebase.firestore
+    val productsCollectionRef = db.collection("products")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,23 +67,26 @@ class DetailProductFragment() : Fragment() {
     override fun onStart() {
         super.onStart()
         val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val parentJob = Job()
+        val scope = CoroutineScope(Dispatchers.Main + parentJob)
         editor = sharedPref.edit()
         currentUserId = sharedPref.getInt("CURRENT_USER_ID",-1)
         productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
-        db = appDatabase.getAppDataBase(v.context)
-        productDao = db?.productDao()
-        userDao = db?.userDao()
-        currentUser = userDao?.loadPersonById(currentUserId)
-        selectedProduct = productDao?.loadProductById(productId)
-        productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
-        textPrdDesc.text = productDes
-        imageProduct.setImageResource(selectedProduct!!.imageResId)
 
-        if(currentUser?.favorite_products!!.contains(selectedProduct!!))
-            butFav.setChecked(true)
-        else
-            butFav.setChecked(false)
-
+        scope.launch {
+            currentUser = getUserById(currentUserId)
+            val query = productsCollectionRef
+                .whereEqualTo("user",currentUser?.username)
+                .whereEqualTo("id", productId)
+            selectedProduct = getProductByQuery(query)
+            productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
+            textPrdDesc.text = productDes
+            imageProduct.setImageResource(selectedProduct!!.imageResId)
+            if(selectedProduct!!.favorite)
+                butFav.setChecked(true)
+            else
+                butFav.setChecked(false)
+        }
 
         butAdd.setOnClickListener {
             val action = ContainerProductFragmentDirections.actionContainerProductFragmentToAddDialogFragment(currentUserId,-1,productId)
@@ -83,12 +94,13 @@ class DetailProductFragment() : Fragment() {
         }
 
         butFav.setOnClickListener {
-            if (butFav.isChecked){
-                currentUser?.favorite_products?.add(selectedProduct!!)
-                userDao?.updatePerson(currentUser)
-            }else{
-                currentUser?.favorite_products?.remove(selectedProduct!!)
-                userDao?.updatePerson(currentUser)
+            scope.launch {
+                val query = productsCollectionRef
+                    .whereEqualTo("user", currentUser?.username)
+                    .whereEqualTo("id", selectedProduct?.id)
+                selectedProduct = getProductByQuery(query)
+                selectedProduct?.favorite = !(selectedProduct!!.favorite)
+                updateProduct(currentUser, selectedProduct!!)
             }
         }
     }
@@ -96,16 +108,25 @@ class DetailProductFragment() : Fragment() {
     override fun onResume() {
         super.onResume()
         val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val parentJob = Job()
+        val scope = CoroutineScope(Dispatchers.Main + parentJob)
         productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
-        selectedProduct = productDao?.loadProductById(productId)
-        productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
-        textPrdDesc.text = productDes
-        imageProduct.setImageResource(selectedProduct!!.imageResId)
 
-        if(currentUser?.favorite_products!!.contains(selectedProduct!!))
-            butFav.setChecked(true)
-        else
-            butFav.setChecked(false)
+        scope.launch {
+            currentUser = getUserById(currentUserId)
+            val query = productsCollectionRef
+                .whereEqualTo("user",currentUser?.username)
+                .whereEqualTo("id", productId)
+            selectedProduct = getProductByQuery(query)
+            productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
+            textPrdDesc.text = productDes
+            imageProduct.setImageResource(selectedProduct!!.imageResId)
+            if(selectedProduct!!.favorite)
+                butFav.setChecked(true)
+            else
+                butFav.setChecked(false)
+        }
+
 
     }
 

@@ -8,36 +8,24 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.time.LocalDate
 
-@Entity(tableName = "users")
-class User(id: Int,name: String, phone_number: String, birthday: LocalDate, username: String, password: String) :
+class User(id: Int,name: String, phone_number: String, birthday: Long, username: String, password: String) :
     Parcelable {
 
-    @PrimaryKey
-    @ColumnInfo(name = "id")
+
     var id: Int
 
-    @ColumnInfo(name = "name")
     var name: String
 
-    @ColumnInfo(name = "phone_number")
     var phone_number: String
 
-    @ColumnInfo(name = "birthday")
-    var birthday: LocalDate
+    var birthday: Long
 
-    @ColumnInfo(name = "username")
     var username: String
 
-    @ColumnInfo(name = "password")
     var password: String
 
-    @ColumnInfo(name = "products")
-    var shopping_list:MutableList<Product>
+    constructor() : this(0,"","", LocalDate.now().toEpochDay(),"","")
 
-    @ColumnInfo(name = "favorite")
-    var favorite_products:MutableList<Product>
-
-    @Ignore
     constructor(parcel: Parcel) : this(
         TODO("id"),
         TODO("name"),
@@ -53,20 +41,17 @@ class User(id: Int,name: String, phone_number: String, birthday: LocalDate, user
         password = parcel.readString()!!
     }
 
-    init{
+    init {
         this.id = id
         this.name = name
         this.phone_number = phone_number
         this.birthday = birthday
         this.username = username
-        this.password =  password
-        this.shopping_list = ArrayList<Product>()
-        this.favorite_products = ArrayList<Product>()
+        this.password = password
     }
 
-    @Ignore
     constructor(username: String,password: String)
-            : this(-1,"","0",LocalDate.now(),username,password)
+            : this(-1,"","0",LocalDate.now().toEpochDay(),username,password)
 
     fun checkUsername (username: String):Boolean{
         if(this.username == username)
@@ -82,13 +67,7 @@ class User(id: Int,name: String, phone_number: String, birthday: LocalDate, user
             return false
     }
 
-   fun totalPrice():Int{
-        var total = 0
-        for (product in this.shopping_list){
-            total += product.quantity*product.price
-        }
-        return total
-    }
+
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)

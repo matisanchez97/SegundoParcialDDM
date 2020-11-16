@@ -4,26 +4,21 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "products")
-class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measure:String,imageResId:Int) {
-    @PrimaryKey
-    @ColumnInfo(name = "id")
+class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measure:String,imageResId:Int, user:String) {
     var id: Int
-    @ColumnInfo(name = "name")
     var name: String
-    @ColumnInfo(name = "brand")
     var brand: String
-    @ColumnInfo(name = "price")
     var price: Int
-    @ColumnInfo(name = "quantity")
     var quantity: Int
-    @ColumnInfo(name = "measure")
     var measure: String
-    @ColumnInfo(name = "resource id")
     var imageResId: Int
+    var user:String
+    var favorite:Boolean
+    var shopping:Boolean
 
-
-
+    constructor() : this(0,"","",0,0,"",0,"")
+    constructor(id: Int,name: String,brand: String,price: Int,quantity: Int,measure: String,imageResId: Int)
+            :this(id,name,brand,price,quantity,measure, imageResId, "debug")
     init{
         this.id = id
         this.name = name
@@ -32,6 +27,9 @@ class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measur
         this.quantity = quantity
         this.measure = measure
         this.imageResId = imageResId
+        this.user = user
+        this.favorite = false
+        this.shopping = false
     }
 
     override fun equals(other: Any?): Boolean {
@@ -46,6 +44,7 @@ class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measur
         if (price != other.price) return false
         if (quantity != other.quantity) return false
         if (measure != other.measure) return false
+        if (user != other.user) return false
 
         return true
     }
@@ -57,6 +56,7 @@ class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measur
         result = 31 * result + price
         result = 31 * result + quantity
         result = 31 * result + measure.hashCode()
+        result = 31 * result + user.hashCode()
         return result
     }
 

@@ -1,5 +1,6 @@
 package com.utn.segundoparcial.fragments
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
@@ -15,15 +16,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.adapters.ShoppingListAdapter
-import com.utn.segundoparcial.database.appDatabase
-import com.utn.segundoparcial.database.productDao
-import com.utn.segundoparcial.database.userDao
 import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.entities.User
+import com.utn.segundoparcial.framework.deleteProduct
+import com.utn.segundoparcial.framework.getProductsByUser
+import com.utn.segundoparcial.framework.getUserById
+import com.utn.segundoparcial.framework.setPrefs
 import kotlinx.android.synthetic.main.fragment_shopping_list.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 /**
@@ -41,8 +52,7 @@ class ShoppingListFragment : Fragment() {
 
     lateinit var shoppingListAdapter: ShoppingListAdapter
     lateinit var selectedProduct: Product
-    lateinit var settingName: String
-    lateinit var settingPassword: String
+    lateinit var auxQuery: Query
 
     var currentUserId: Int = 0
     var editProductPos: Int = 0
@@ -54,11 +64,11 @@ class ShoppingListFragment : Fragment() {
     var actionMode : ActionMode? = null
     var favMenu = false
 
-    private var db: appDatabase? = null
-    private var userDao: userDao? = null
-    private var productDao: productDao? = null
     private var sortingOrder = 0
     private lateinit var callback : ActionMode.Callback
+
+    val db = Firebase.firestore
+    val productsCollectionRef = db.collection("products")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +89,9 @@ class ShoppingListFragment : Fragment() {
             }
 
             override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+                val parentJob = Job()
+                val scope = CoroutineScope(Dispatchers.Main + parentJob)
+
                 return when (item?.itemId) {        //Defino el comportamiento de los items de la contextual toolbar
                     R.id.edit -> {
                         if (favMenu)
@@ -97,16 +110,25 @@ class ShoppingListFragment : Fragment() {
                         true
                     }
                     R.id.delete -> {
-                        shoppingList?.removeAll(selectedProducts as Collection<Product>)
-                        if (favMenu)
-                            currentUser?.favorite_products = shoppingList!!.toMutableList()
-                        else
-                            currentUser?.shopping_list = shoppingList!!.toMutableList()
-                        userDao?.updatePerson(currentUser)
-                        actionMode?.finish()
-                        recyclerProducts.adapter?.notifyDataSetChanged()
+
+                        scope.launch {
+                            if (favMenu) {
+                                auxQuery
+                                    .whereEqualTo("favorite", true)
+                            } else {
+                                auxQuery
+                                    .whereEqualTo("shopping", true)
+
+                            }
+                            deleteProduct(auxQuery, selectedProducts)
+                            shoppingList?.removeAll(selectedProducts as Collection<Product>)
+                            actionMode?.finish()
+                            recyclerProducts.adapter?.notifyDataSetChanged()
+
+                        }
                         true
                     }
+
                     R.id.more -> {
                         true
                     }
@@ -126,6 +148,8 @@ class ShoppingListFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val parentJob = Job()
+        val scope = CoroutineScope(Dispatchers.Main + parentJob)
         val id = when(item.itemId) {
             R.id.favorite -> {
                 if (favMenu) {
@@ -135,12 +159,14 @@ class ShoppingListFragment : Fragment() {
                     textTitle_3.text = getString(R.string.title_3a)
                     favMenu = false
                 } else {
-                    shoppingListaux = shoppingList?.toMutableList()
-                    shoppingList?.removeAll(shoppingList!!)
-                    shoppingList?.addAll(currentUser!!.favorite_products)
-                    recyclerProducts.adapter?.notifyDataSetChanged()
-                    textTitle_3.text = getString(R.string.title_3b)
-                    favMenu = true
+                    scope.launch {
+                        favMenu = true
+                        shoppingListaux = shoppingList?.toMutableList()
+                        shoppingList?.removeAll(shoppingList!!)
+                        getProductsByUser(0, currentUser, favMenu,shoppingList)
+                        recyclerProducts.adapter?.notifyDataSetChanged()
+                        textTitle_3.text = getString(R.string.title_3b)
+                    }
                 }
             }
             R.id.calculate ->{
@@ -175,48 +201,24 @@ class ShoppingListFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val editor = prefs.edit()
-
+        val parentJob = Job()
+        val scope = CoroutineScope(Dispatchers.Main + parentJob)
         (activity as MainActivity).supportActionBar?.title = getString(R.string.app_name)
-        db = appDatabase.getAppDataBase(v.context)
-        userDao = db?.userDao()
-        productDao = db?.productDao()
         currentUserId = ShoppingListFragmentArgs.fromBundle(requireArguments()).loggedUserId
-        currentUser = userDao?.loadPersonById(currentUserId)
-
-        sortingOrder = prefs.getString("sort","0")!!.toInt()
-        settingName = prefs.getString("first_name", currentUser?.name)!!
-        settingPassword = prefs.getString("password", currentUser?.password)!!
-        if (settingName.isEmpty()) {
-            editor.putString("first_name", currentUser?.name)
-            settingName = currentUser!!.name
-        }
-        if (settingPassword.isEmpty()) {
-            editor.putString("password", currentUser?.password)
-            settingPassword = currentUser!!.password
-        }
-        editor.apply()
-        if (currentUser?.name != settingName)
-            currentUser?.name = settingName
-        if (currentUser?.password != settingPassword)
-            currentUser?.password = settingPassword
-        userDao?.updatePerson(currentUser)
-
-        shoppingList = currentUser?.shopping_list?.toMutableList()
-        when(sortingOrder){
-            1 ->
-                shoppingList!!.sortBy { it.id }
-            2 ->
-                shoppingList!!.sortBy { it.price }
-            else -> ""
-        }
-
         recyclerProducts.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerProducts.layoutManager = linearLayoutManager
-        shoppingListAdapter = ShoppingListAdapter(shoppingList!!,{position,cardView -> OnItemClick(position,cardView)},{position,cardView -> OnItemLongClick(position,cardView)})
-        recyclerProducts.adapter = shoppingListAdapter
+
+        scope.launch {
+            currentUser = getUserById(currentUserId)
+            sortingOrder = setPrefs(currentUser,requireContext())
+            shoppingList?.removeAll(shoppingList!!)
+            getProductsByUser(sortingOrder,currentUser,false,shoppingList)
+            auxQuery = productsCollectionRef
+                .whereEqualTo("user",currentUser?.username)
+            shoppingListAdapter = ShoppingListAdapter(shoppingList!!,{position,cardView -> OnItemClick(position,cardView)},{position,cardView -> OnItemLongClick(position,cardView)})
+            recyclerProducts.adapter = shoppingListAdapter
+        }
 
         butFloatAdd.setOnClickListener {
             val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
@@ -258,3 +260,5 @@ class ShoppingListFragment : Fragment() {
         actionMode?.title = selectedProducts?.size.toString() + " selected"
     }
 }
+
+

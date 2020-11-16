@@ -12,10 +12,11 @@ import android.widget.DatePicker
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.constants.AREA_CODES
-import com.utn.segundoparcial.database.appDatabase
-import com.utn.segundoparcial.database.userDao
 import com.utn.segundoparcial.entities.User
 import java.time.LocalDate
 import java.util.*
@@ -45,8 +46,10 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     lateinit var firstname: String
     lateinit var phone: String
 
-    private var db: appDatabase? = null
-    private var userDao: userDao? = null
+    val db = Firebase.firestore
+    val usersCollectionRef = db.collection("users")
+    val productsCollectionRef = db.collection("products")
+
 
     var users: MutableList<User>? = ArrayList<User>()
 
@@ -76,17 +79,22 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     }
 
     override fun onDateSet(view: DatePicker?, year: Int,month:Int,day:Int) {        //Cuando se setea la fecha del datepicker, creo una variable del tipo localdate
-        birthDate = LocalDate.of(year,month+1,day)                          //Y la cargo en el View
+        birthDate = LocalDate.of(year,month+1,day)                         //Y la cargo en el View
         textEditDate.setText(birthDate.toString())
     }
 
     override fun onStart() {
         super.onStart()
         val adapter = ArrayAdapter<String>(requireContext(),R.layout.area_item, AREA_CODES)     //Creo un adaptador para el AutoCompleteTextView del las areas
-        textListArea.setAdapter(adapter)                                                        //A partir de los valores constantes definidos
-        db = appDatabase.getAppDataBase(v.context)
-        userDao = db?.userDao()
-        users = userDao?.loadAllPersons()!!
+        textListArea.setAdapter(adapter)
+        usersCollectionRef
+            .get()
+            .addOnSuccessListener { snapshot ->
+                if (snapshot!= null)
+                    for(user in snapshot){
+                        users?.add(user.toObject())
+                    }
+            }
         if(users!=null)
             i = users!!.size
 
@@ -111,9 +119,9 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                 }
             }
             if (isValid){                                  //Si pasa todos los chequeos de validez, creo el nuevo usuario
-                newUser = User(i,firstname,phone,birthDate,username,password)
+                newUser = User(i,firstname,phone,birthDate.toEpochDay(),username,password)
                 i++
-                userDao?.insertPerson(newUser)
+                usersCollectionRef.add(newUser)
                 val action_3 = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
                 v.findNavController().navigate(action_3)
             }

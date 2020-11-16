@@ -11,13 +11,20 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.adapters.ShoppingListAdapter
 import com.utn.segundoparcial.constants.PRODUCT_CODES
-import com.utn.segundoparcial.database.appDatabase
-import com.utn.segundoparcial.database.productDao
 import com.utn.segundoparcial.entities.Product
+import com.utn.segundoparcial.framework.getAllProducts
+import com.utn.segundoparcial.framework.getProductByQuery
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 
 /**
@@ -32,13 +39,15 @@ class SimilarProductFragment() : Fragment() {
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var shoppingListAdapter: ShoppingListAdapter
 
-    private var db: appDatabase? = null
-    private var productDao: productDao? = null
+    val db = Firebase.firestore
+    val usersCollectionRef = db.collection("users")
+    val productsCollectionRef = db.collection("products")
 
     var productId: Int = 0
     private val PREF_NAME = "myPreferences"
     private var editor: SharedPreferences.Editor? = null
     var selectedProduct: Product? = null
+    var allProducts: MutableList<Product>? = ArrayList<Product>()
     var similarProductList: MutableList<Product>? = ArrayList<Product>()
 
     override fun onCreateView(
@@ -54,21 +63,33 @@ class SimilarProductFragment() : Fragment() {
     override fun onStart() {
         super.onStart()
         val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val parentJob = Job()
+        val scope = CoroutineScope(Dispatchers.Main + parentJob)
         editor = sharedPref.edit()
         productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
-        db = appDatabase.getAppDataBase(v.context)
-        productDao = db?.productDao()
-        selectedProduct = productDao?.loadProductById(productId)
-        for(item in PRODUCT_CODES){
-            if(selectedProduct!!.name.startsWith(item))
-                similarProductList = productDao?.loadSimilarProducts(item)
-        }
         recyclerSimilarProducts.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerSimilarProducts.layoutManager = linearLayoutManager
-        if(!(similarProductList.isNullOrEmpty())){
-            shoppingListAdapter = ShoppingListAdapter(similarProductList!!,{position,cardView -> OnItemClick(position,cardView)},{position , cardView-> OnItemLongClick(position,cardView)})
-            recyclerSimilarProducts.adapter = shoppingListAdapter
+
+        scope.launch {
+            val query = productsCollectionRef
+                .whereEqualTo("user","debug")
+                .whereEqualTo("id",productId)
+            selectedProduct = getProductByQuery(query)
+            getAllProducts(allProducts)
+            similarProductList?.removeAll(similarProductList!!)
+            for(item in PRODUCT_CODES){
+                if (selectedProduct!!.name.startsWith(item)){
+                    for (product in allProducts!!){
+                        if (product!!.name.startsWith(item))
+                            similarProductList?.add(product)
+                    }
+                }
+            }
+            if(!(similarProductList.isNullOrEmpty())){
+                shoppingListAdapter = ShoppingListAdapter(similarProductList!!,{position,cardView -> OnItemClick(position,cardView)},{position , cardView-> OnItemLongClick(position,cardView)})
+                recyclerSimilarProducts.adapter = shoppingListAdapter
+            }
         }
     }
     fun OnItemClick(position: Int,cardView: CardView){
@@ -85,15 +106,30 @@ class SimilarProductFragment() : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
-        selectedProduct = productDao?.loadProductById(productId)
-        similarProductList?.removeAll(similarProductList!!)
-        for(item in PRODUCT_CODES){
-            if(selectedProduct!!.name.startsWith(item))
-                similarProductList?.addAll(productDao?.loadSimilarProducts(item)!!)
+        val sharedPref: SharedPreferences =
+            requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        productId = sharedPref.getInt("SELECTED_PRODUCT_ID", -1)
+        val parentJob = Job()
+        val scope = CoroutineScope(Dispatchers.Main + parentJob)
+
+        scope.launch {
+            val query = productsCollectionRef
+                .whereEqualTo("user", "debug")
+                .whereEqualTo("id", productId)
+            selectedProduct = getProductByQuery(query)
+            getAllProducts(allProducts)
+            similarProductList?.removeAll(similarProductList!!)
+            for (item in PRODUCT_CODES) {
+                if (selectedProduct!!.name.startsWith(item)) {
+                    for (product in allProducts!!) {
+                        if (product!!.name.startsWith(item))
+                            similarProductList?.add(product)
+                    }
+                }
+            }
+            recyclerSimilarProducts.adapter?.notifyDataSetChanged()
+
         }
-        recyclerSimilarProducts.adapter?.notifyDataSetChanged()
     }
 
 }
