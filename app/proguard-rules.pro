@@ -11,7 +11,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
+-keepnames class androidx.navigation.fragment.NavHostFragment
+-keepnames class com.google.android.gms.maps.SupportMapFragment
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

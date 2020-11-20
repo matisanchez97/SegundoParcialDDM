@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_shoppinglistFragment_to_settingsActivity"
             app:destination="@id/settingsActivity" />
+        <action
+            android:id="@+id/action_shoppinglistFragment_to_startRaceFragment"
+            app:destination="@id/startRaceFragment" />
     </fragment>
     <fragment
         android:id="@+id/containerProductFragment"
@@ -97,4 +100,18 @@
         android:name="com.utn.segundoparcial.SettingsActivity"
         android:label="activity_settings"
         tools:layout="@layout/activity_settings" />
+    <fragment
+        android:id="@+id/startRaceFragment"
+        android:name="com.utn.segundoparcial.fragments.StartRaceFragment"
+        android:label="fragment_start_race"
+        tools:layout="@layout/fragment_start_race" >
+        <action
+            android:id="@+id/action_startRaceFragment_to_currentRace"
+            app:destination="@id/currentRace" />
+    </fragment>
+    <fragment
+        android:id="@+id/currentRace"
+        android:name="com.utn.segundoparcial.fragments.CurrentRaceFragment"
+        android:label="fragment_current_race"
+        tools:layout="@layout/fragment_current_race" />
 </navigation>

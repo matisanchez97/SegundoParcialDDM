@@ -222,7 +222,8 @@ class ShoppingListFragment : Fragment() {
 
         butFloatAdd.setOnClickListener {
             val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
-            findNavController().navigate(action_5)
+            val action_6 = ShoppingListFragmentDirections.actionShoppinglistFragmentToStartRaceFragment()
+            findNavController().navigate(action_6)
         }
     }
 

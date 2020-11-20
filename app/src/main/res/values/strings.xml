@@ -17,7 +17,7 @@
     <string name="title_4">Product Information</string>
     <string name="title_5">Similar Products</string>
     <string name="title_6">Products of the same Brand</string>
-    <string name="title_7">Add Product</string>
+    <string name="title_7">Start Race</string>
     <string name="title_8">Edit Product</string>
     <string name="username">Username</string>
     <string name="icon_acc">Icon for name</string>
@@ -56,15 +56,28 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails</string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="user_location_permission_explanation">For the app to work properly you need to grant location permission</string>
+    <string name="user_location_permission_not_granted">The app wont work properly</string>
+
+
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
 
+    <string name="google_maps_key">AIzaSyCFSoMvjI8_Oldf3nUKAJWlYo0b5FXn8TQ</string>
+
     <string name="mapbox_access_token">pk.eyJ1IjoibWF0aWFzc2FuY2hlem4iLCJhIjoiY2toanB3ZXBvMDFrdTJwcDh1djNrZmZjZyJ9.7V7Eo1xIYXE0yKNhpkIpwg</string>
 
-
+    <string name="title_activity_maps">Current Place Details</string>
+    <string name="default_info_title">Default Location</string>
+    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
+    <string name="map_api">AIzaSyCFSoMvjI8_Oldf3nUKAJWlYo0b5FXn8TQ</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
