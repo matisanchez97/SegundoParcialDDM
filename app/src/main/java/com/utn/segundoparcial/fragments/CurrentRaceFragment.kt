@@ -8,17 +8,23 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Chronometer
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.utn.segundoparcial.R
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.time.seconds
 
 
@@ -32,12 +38,17 @@ class CurrentRaceFragment : Fragment() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var mLocationCallback : LocationCallback
     private lateinit var textViewDistance: TextView
+    private lateinit var butFloatStop: FloatingActionButton
+    private lateinit var butFloatPause: FloatingActionButton
+    private lateinit var Timer: Chronometer
+    private lateinit var T: Timer
     private var starPoint: Location? = null
     private var race: MutableList<Location> = ArrayList<Location>()
     private var distance:Float = 0.toFloat()
-    private var nanotime: Long = 0
+    private var speed:Float = 0.toFloat()
     private var time: Long = 0
     private var i =0
+    private var isCounting = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireActivity())
@@ -45,17 +56,16 @@ class CurrentRaceFragment : Fragment() {
             override fun onLocationResult(p0: LocationResult?) {
                 super.onLocationResult(p0)
                 for (location in p0!!.locations) {
-                        race.add(location)
-                        distance += race.elementAt(i).distanceTo(race.elementAt(i + 1))
-                        nanotime += race.elementAt(i+1).elapsedRealtimeNanos - race.elementAt(i).elapsedRealtimeNanos
-                        time = nanotime.div(1000000000)
-                        textViewDistance.text = "Distance : " + distance.toString() + "\n" + "Time : " + time.toString()
-                        i++
+                    race.add(location)
+                    distance += race.elementAt(i).distanceTo(race.elementAt(i + 1))
+                    if (Timer!=null)
+                        speed = distance.div(time)
+                    i++
                     }
             }
         }
-
         getLastLocation()
+
     }
 
     override fun onCreateView(
@@ -65,13 +75,37 @@ class CurrentRaceFragment : Fragment() {
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_current_race, container, false)
         textViewDistance = v.findViewById(R.id.textDistance)
+        Timer = v.findViewById(R.id.view_timer)
+        butFloatPause = v.findViewById(R.id.floating_pause_button)
+        butFloatStop = v.findViewById(R.id.floating_stop_button)
         return v
     }
 
     override fun onStart() {
         super.onStart()
-
+        Timer.base = SystemClock.elapsedRealtime()
+        Timer.start()
+        isCounting = true
+        Timer.setOnChronometerTickListener {
+            time = (SystemClock.elapsedRealtime() - Timer.base)/1000
+            textViewDistance.text = "Distance :" + distance.toString() +" mts\nSpeed :" + speed.toString() + " mts/s"
+        }
+        butFloatPause.setOnClickListener {
+            if(isCounting){
+                Timer.stop()
+                isCounting = false
+                butFloatPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                fusedLocationProviderClient.removeLocationUpdates(mLocationCallback)
+            } else{
+                Timer.base = SystemClock.elapsedRealtime()-time*1000
+                Timer.start()
+                isCounting = true
+                butFloatPause.setImageResource(R.drawable.ic_baseline_pause_24)
+                requestNewLocationData()
+            }
+        }
     }
+
 
 
 
