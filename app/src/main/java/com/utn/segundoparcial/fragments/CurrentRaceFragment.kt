@@ -58,8 +58,6 @@ class CurrentRaceFragment : Fragment() {
                 for (location in p0!!.locations) {
                     race.add(location)
                     distance += race.elementAt(i).distanceTo(race.elementAt(i + 1))
-                    if (Timer!=null)
-                        speed = distance.div(time)
                     i++
                     }
             }
@@ -88,6 +86,8 @@ class CurrentRaceFragment : Fragment() {
         isCounting = true
         Timer.setOnChronometerTickListener {
             time = (SystemClock.elapsedRealtime() - Timer.base)/1000
+            if (Timer!=null && time > 0 )
+                speed = distance.div(time)
             textViewDistance.text = "Distance :" + distance.toString() +" mts\nSpeed :" + speed.toString() + " mts/s"
         }
         butFloatPause.setOnClickListener {

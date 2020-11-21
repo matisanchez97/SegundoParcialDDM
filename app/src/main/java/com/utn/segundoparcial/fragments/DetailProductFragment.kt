@@ -74,7 +74,7 @@ class DetailProductFragment() : Fragment() {
         productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
 
         scope.launch {
-            currentUser = getUserById(currentUserId)
+            currentUser = getUserById(currentUserId.toString())
             val query = productsCollectionRef
                 .whereEqualTo("user",currentUser?.username)
                 .whereEqualTo("id", productId)
@@ -113,7 +113,7 @@ class DetailProductFragment() : Fragment() {
         productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
 
         scope.launch {
-            currentUser = getUserById(currentUserId)
+            currentUser = getUserById(currentUserId.toString())
             val query = productsCollectionRef
                 .whereEqualTo("user",currentUser?.username)
                 .whereEqualTo("id", productId)

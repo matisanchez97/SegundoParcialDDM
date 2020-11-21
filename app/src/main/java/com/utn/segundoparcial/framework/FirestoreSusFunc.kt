@@ -228,7 +228,7 @@ suspend fun loadProductsLists(productListName: MutableList<String>,productListBr
     return 0
 }
 
-suspend fun getUserById(userid:Int): User? {
+suspend fun getUserById(userid:String): User? {
     val db = Firebase.firestore
     val usersCollectionRef = db.collection("users")
     var currentUser: User? = null

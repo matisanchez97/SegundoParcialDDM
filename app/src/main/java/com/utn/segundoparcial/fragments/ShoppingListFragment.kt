@@ -54,7 +54,7 @@ class ShoppingListFragment : Fragment() {
     lateinit var selectedProduct: Product
     lateinit var auxQuery: Query
 
-    var currentUserId: Int = 0
+    var currentUserId: String = ""
     var editProductPos: Int = 0
     var currentUser: User? = null
     var shoppingList: MutableList<Product>? = ArrayList<Product>()
@@ -99,7 +99,7 @@ class ShoppingListFragment : Fragment() {
                         else {
                             if (selectedProducts!!.size == 1){
                                 editProductPos = shoppingList!!.indexOf(selectedProducts!![0])
-                                val action_7 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,editProductPos,-1)
+                                val action_7 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId.toInt(),editProductPos,-1)
                                 actionMode?.finish()
                                 findNavController().navigate(action_7)
                             }
@@ -221,7 +221,7 @@ class ShoppingListFragment : Fragment() {
         }
 
         butFloatAdd.setOnClickListener {
-            val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
+            //val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
             val action_6 = ShoppingListFragmentDirections.actionShoppinglistFragmentToStartRaceFragment()
             findNavController().navigate(action_6)
         }
@@ -230,7 +230,7 @@ class ShoppingListFragment : Fragment() {
     fun OnItemClick(position: Int,cardView: CardView){
         if(selectedProducts!!.isEmpty()) {              //Si no estamos en el Contextual Toolbar
             selectedProduct = shoppingList!![position]  //Me voy para el DetailFragment
-            val action_4 = ShoppingListFragmentDirections.actionShoppinglistFragmentToContainerProductFragment(selectedProduct.id, currentUserId)
+            val action_4 = ShoppingListFragmentDirections.actionShoppinglistFragmentToContainerProductFragment(selectedProduct.id, currentUserId.toInt())
             findNavController().navigate(action_4)
         }
         else{

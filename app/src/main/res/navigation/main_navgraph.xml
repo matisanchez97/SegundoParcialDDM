@@ -33,7 +33,7 @@
         tools:layout="@layout/fragment_shopping_list">
         <argument
             android:name="loggedUserId"
-            app:argType="integer" />
+            app:argType="string" />
         <action
             android:id="@+id/action_shoppinglistFragment_to_containerProductFragment"
             app:destination="@id/containerProductFragment" />

@@ -93,7 +93,7 @@
         app:layout_constraintVertical_bias="0.30" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textFieldUsr"
+        android:id="@+id/textFieldMail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
@@ -105,10 +105,10 @@
 
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textEditUsr"
+            android:id="@+id/textEditMail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/username" />
+            android:hint="@string/email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

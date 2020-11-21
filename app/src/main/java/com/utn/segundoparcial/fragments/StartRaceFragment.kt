@@ -26,8 +26,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.utn.segundoparcial.BasicMapDemoActivity
 import com.utn.segundoparcial.R
+import kotlinx.android.synthetic.main.fragment_start_race.*
 
-class StartRaceFragment : Fragment() {
+class StartRaceFragment : Fragment()  {
 
     private var mapsave: GoogleMap? = null
     private var cameraPosition: CameraPosition? = null
@@ -56,6 +57,7 @@ class StartRaceFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
+        mapsave = googleMap
 
         // Prompt the user for permission.
         getLocationPermission()
@@ -67,7 +69,6 @@ class StartRaceFragment : Fragment() {
         // Get the current location of the device and set the position of the map.
         getDeviceLocation(googleMap)
 
-        mapsave = googleMap
 
     }
 
@@ -155,19 +156,18 @@ class StartRaceFragment : Fragment() {
             == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true
         } else {
-            ActivityCompat.requestPermissions(this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
         }
     }
     // [END maps_current_place_location_permission]
 
-    /**
-     * Handles the result of the request for location permissions.
-     */
-    // [START maps_current_place_on_request_permissions_result]
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         locationPermissionGranted = false
         when (requestCode) {
             PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
@@ -176,10 +176,12 @@ class StartRaceFragment : Fragment() {
                 if (grantResults.isNotEmpty() &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true
+                    val mapFragment = childFragmentManager
+                        .findFragmentById(R.id.map) as SupportMapFragment?
+                    mapFragment?.getMapAsync(callback)
                 }
             }
         }
-        //updateLocationUI()
     }
     // [END maps_current_place_on_request_permissions_result]
 

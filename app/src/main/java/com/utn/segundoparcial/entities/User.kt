@@ -8,38 +8,19 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.time.LocalDate
 
-class User(id: Int,name: String, phone_number: String, birthday: Long, username: String, password: String) :
-    Parcelable {
+class User(id: String,name: String, phone_number: String, birthday: Long, username: String, password: String,email: String) {
 
 
-    var id: Int
-
+    var id: String
     var name: String
-
     var phone_number: String
-
     var birthday: Long
-
     var username: String
-
     var password: String
+    var email: String
 
-    constructor() : this(0,"","", LocalDate.now().toEpochDay(),"","")
+    constructor() : this("","","", LocalDate.now().toEpochDay(),"","","")
 
-    constructor(parcel: Parcel) : this(
-        TODO("id"),
-        TODO("name"),
-        TODO("phone_number"),
-        TODO("birthday"),
-        TODO("username"),
-        TODO("password")
-    ) {
-        id = parcel.readInt()
-        name = parcel.readString()!!
-        phone_number = parcel.readString()!!
-        username = parcel.readString()!!
-        password = parcel.readString()!!
-    }
 
     init {
         this.id = id
@@ -48,13 +29,16 @@ class User(id: Int,name: String, phone_number: String, birthday: Long, username:
         this.birthday = birthday
         this.username = username
         this.password = password
+        this.email = email
     }
 
-    constructor(username: String,password: String)
-            : this(-1,"","0",LocalDate.now().toEpochDay(),username,password)
+    constructor(password: String,email: String)
+            : this("","","0",LocalDate.now().toEpochDay(),"",password,email)
+    constructor(username: String,password: String,email: String)
+            : this("","","0",LocalDate.now().toEpochDay(),username,password,email)
 
-    fun checkUsername (username: String):Boolean{
-        if(this.username == username)
+    fun checkEmail (email: String):Boolean{
+        if(this.email == email)
             return true
         else
             return false
@@ -66,30 +50,5 @@ class User(id: Int,name: String, phone_number: String, birthday: Long, username:
         else
             return false
     }
-
-
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(id)
-        parcel.writeString(name)
-        parcel.writeString(phone_number)
-        parcel.writeString(username)
-        parcel.writeString(password)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<User> {
-        override fun createFromParcel(parcel: Parcel): User {
-            return User(parcel)
-        }
-
-        override fun newArray(size: Int): Array<User?> {
-            return arrayOfNulls(size)
-        }
-    }
-
 
 }

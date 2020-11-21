@@ -20,14 +20,16 @@
     <string name="title_7">Start Race</string>
     <string name="title_8">Edit Product</string>
     <string name="username">Username</string>
+    <string name="email">Email</string>
     <string name="icon_acc">Icon for name</string>
     <string name="icon_phone">Icon for phone number</string>
     <string name="icon_date">Icon for birthday</string>
     <string name="img_acc_item">Icon of the account</string>
     <string name="error_msg">Field can\'t be empty</string>
-    <string name="error_msg_usr_1">Username doesn\'t exists</string>
-    <string name="error_msg_usr_2">Username already exists</string>
-    <string name="error_msg_pass">Wrong password</string>
+    <string name="error_msg_usr_1">Email doesn\'t exists</string>
+    <string name="error_msg_usr_2">Email already in use</string>
+    <string name="error_msg_pass_1">Wrong password</string>
+    <string name="error_msg_pass_2">Password must be at least 6 char long</string>
     <string name="fab_content_desc">Button to add product</string>
     <string name="product_name">Product Name</string>
     <string name="product_brand">Product Brand</string>
@@ -64,19 +66,12 @@
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
     -->
-    <string name="hello_world">Hello Square World!</string>
 
     <string name="google_maps_key">AIzaSyCFSoMvjI8_Oldf3nUKAJWlYo0b5FXn8TQ</string>
 
     <string name="mapbox_access_token">pk.eyJ1IjoibWF0aWFzc2FuY2hlem4iLCJhIjoiY2toanB3ZXBvMDFrdTJwcDh1djNrZmZjZyJ9.7V7Eo1xIYXE0yKNhpkIpwg</string>
-
-    <string name="title_activity_maps">Current Place Details</string>
-    <string name="default_info_title">Default Location</string>
-    <string name="default_info_snippet">No places found, because location permission is disabled.</string>
-    <string name="option_get_place">Get place</string>
-    <string name="pick_place">Choose a place</string>
     <string name="map_api">AIzaSyCFSoMvjI8_Oldf3nUKAJWlYo0b5FXn8TQ</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
