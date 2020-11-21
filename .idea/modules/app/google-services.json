@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1342219527",
+    "firebase_url": "https://segundoparcialddm-4ec7f.firebaseio.com",
+    "project_id": "segundoparcialddm-4ec7f",
+    "storage_bucket": "segundoparcialddm-4ec7f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1342219527:android:f12a1765ffb7ddd1e051a2",
+        "android_client_info": {
+          "package_name": "com.utn.segundoparcial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1342219527-doj9nqe892km032e5rbnqo4d7kh3tmv1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.utn.segundoparcial",
+            "certificate_hash": "355868201c1fca074f388c7abbf7f3b2fdd98673"
+          }
+        },
+        {
+          "client_id": "1342219527-ebie7stu342ppgv35aej48oah9mbv0rh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBpLrhdsVI-Dcy8MTIGrYp1-COoZ81c_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1342219527-ebie7stu342ppgv35aej48oah9mbv0rh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -81,7 +81,7 @@ class DetailProductFragment() : Fragment() {
             selectedProduct = getProductByQuery(query)
             productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
             textPrdDesc.text = productDes
-            imageProduct.setImageResource(selectedProduct!!.imageResId)
+            //imageProduct.setImageResource(selectedProduct!!.imageResId)
             if(selectedProduct!!.favorite)
                 butFav.setChecked(true)
             else
@@ -120,7 +120,7 @@ class DetailProductFragment() : Fragment() {
             selectedProduct = getProductByQuery(query)
             productDes = selectedProduct?.name + " de la marca " + selectedProduct?.brand + "\nMedida: " + selectedProduct?.measure + "\nPrecio: $" + selectedProduct?.price.toString()
             textPrdDesc.text = productDes
-            imageProduct.setImageResource(selectedProduct!!.imageResId)
+            //imageProduct.setImageResource(selectedProduct!!.imageResId)
             if(selectedProduct!!.favorite)
                 butFav.setChecked(true)
             else

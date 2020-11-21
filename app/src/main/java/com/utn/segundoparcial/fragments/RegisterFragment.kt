@@ -59,7 +59,6 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     val scope = CoroutineScope(Dispatchers.Main + parentJob)
     val db = Firebase.firestore
     val usersCollectionRef = db.collection("users")
-    val productsCollectionRef = db.collection("products")
 
 
     var users: MutableList<User>? = ArrayList<User>()

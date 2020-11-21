@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.utn.segundoparcial.R
+import com.utn.segundoparcial.entities.Race
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.seconds
@@ -47,6 +48,7 @@ class CurrentRaceFragment : Fragment() {
     private var distance:Float = 0.toFloat()
     private var speed:Float = 0.toFloat()
     private var time: Long = 0
+    private var route: String =""
     private var i =0
     private var isCounting = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +59,7 @@ class CurrentRaceFragment : Fragment() {
                 super.onLocationResult(p0)
                 for (location in p0!!.locations) {
                     race.add(location)
+                    route = route + "#" + race.elementAt(i+1).latitude.toString() + "," + race.elementAt(0).longitude.toString()
                     distance += race.elementAt(i).distanceTo(race.elementAt(i + 1))
                     i++
                     }
@@ -104,6 +107,10 @@ class CurrentRaceFragment : Fragment() {
                 requestNewLocationData()
             }
         }
+        butFloatStop.setOnClickListener {
+            val race = Race(0,"matute",distance.toInt(),time,route)
+            race.routePositions()
+        }
     }
 
 
@@ -120,6 +127,7 @@ class CurrentRaceFragment : Fragment() {
                     if (location != null) {
                         starPoint = location
                         race.add(starPoint!!)
+                        route =  race.elementAt(0).latitude.toString() + "," + race.elementAt(0).longitude.toString()
                         requestNewLocationData()
                     } else {
 //                        findViewById<TextView>(R.id.latTextView).text = location.latitude.toString()

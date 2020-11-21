@@ -1,24 +1,25 @@
 package com.utn.segundoparcial.entities
 
+import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measure:String,imageResId:Int, user:String) {
+class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measure:String,downloadUri: String, user:String) {
     var id: Int
     var name: String
     var brand: String
     var price: Int
     var quantity: Int
     var measure: String
-    var imageResId: Int
+    var downloadUri: String
     var user:String
     var favorite:Boolean
     var shopping:Boolean
 
-    constructor() : this(0,"","",0,0,"",0,"")
-    constructor(id: Int,name: String,brand: String,price: Int,quantity: Int,measure: String,imageResId: Int)
-            :this(id,name,brand,price,quantity,measure, imageResId, "debug")
+    constructor() : this(0,"","",0,0,"","","")
+    constructor(id: Int,name: String,brand: String,price: Int,quantity: Int,measure: String)
+            :this(id,name,brand,price,quantity,measure,"", "debug")
     init{
         this.id = id
         this.name = name
@@ -26,10 +27,14 @@ class Product(id:Int, name: String,brand: String, price:Int, quantity:Int,measur
         this.price = price
         this.quantity = quantity
         this.measure = measure
-        this.imageResId = imageResId
+        this.downloadUri = downloadUri
         this.user = user
         this.favorite = false
         this.shopping = false
+    }
+
+    fun addDownloadUri(downloadUri: Uri){
+        this.downloadUri = downloadUri.toString()
     }
 
     override fun equals(other: Any?): Boolean {

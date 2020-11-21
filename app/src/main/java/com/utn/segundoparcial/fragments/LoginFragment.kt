@@ -1,5 +1,6 @@
 package com.utn.segundoparcial.fragments
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.constants.PRODUCTS_LIST
 import com.utn.segundoparcial.entities.User
@@ -25,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.time.LocalDate
 
 
@@ -51,7 +55,7 @@ class LoginFragment : Fragment() {
     val scope = CoroutineScope(Dispatchers.Main + parentJob)
     val db = Firebase.firestore
     val usersCollectionRef = db.collection("users")
-    val productsCollectionRef = db.collection("products")
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +77,6 @@ class LoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         scope.launch {
-            dbInit()
             getUsers()
             userFound = false
         }
@@ -96,50 +99,6 @@ class LoginFragment : Fragment() {
             }
         }
     }
-            /*inputUser = User(textFieldPass.editText!!.text.toString(),textFieldMail.editText!!.text.toString())
-            textFieldMail.error = null
-            textFieldPass.error =null
-            if(){     //Si los dos campos estan completos
-                mAuth.signInWithEmailAndPassword(inputUser.email,inputUser.password)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            for (user in users!!)
-                                if (user.checkEmail(inputUser.email)) {
-                                    val action_2 =
-                                        LoginFragmentDirections.actionLoginFragmentToWelcomeFragment(
-                                            user.id
-                                        )
-                                    v.findNavController().navigate(action_2)
-                                }
-                        } else {
-                            textFieldPass.error = getString(R.string.error_msg_pass)
-                        }
-                    }
-                /*for (user in users!!)  {
-                    if(user.checkEmail(inputUser.email)){                         //Chequeo si el usuario de la base de datos tiene ese nombre
-                        userFound = true
-                        if (user.checkPassword(inputUser.password)){                    //Cuando encuentro uno chqueo si tiene la contraseña ingresada
-                            Snackbar.make(loginLayout,"Welcome " + user.name.toString(), Snackbar.LENGTH_SHORT).show()
-                            val action_2 = LoginFragmentDirections.actionLoginFragmentToWelcomeFragment(user.id)
-                            v.findNavController().navigate(action_2)
-                        }
-                        else{                                                           //Si la contraseña es incorrecta, devuelvo un mensaje de error
-                            textFieldPass.error = getString(R.string.error_msg_pass)
-                            break
-                        }
-                    }
-                }
-                if(!userFound)                                                          //Si no encuentro usuario, devuelvo un mensaje de error
-                    textFieldMail.error = getString(R.string.error_msg_usr_1)*/
-            }
-                else {                                                                       //Si alguno de los campos esta vacion, devuelvo un mensaje de error
-                if (inputUser.username.isBlank())
-                    textFieldMail.error = getString(R.string.error_msg)
-                if (inputUser.password.isBlank())
-                    textFieldPass.error = getString(R.string.error_msg)
-            }
-        }
-    }*/
 
     override fun onResume() {
         super.onResume()
@@ -150,27 +109,7 @@ class LoginFragment : Fragment() {
         editor.apply()
     }
 
-    suspend fun dbInit() {
-        try {
-            val data = productsCollectionRef
-                .whereEqualTo("user", "debug")
-                .get()
-                .await()
-            if (data.isEmpty) {
-                for (product in PRODUCTS_LIST)
-                    productsCollectionRef.add(product).await()
-            }
-            val data2 = usersCollectionRef
-                .whereEqualTo("username", "debug")
-                .get()
-                .await()
-            if (data.isEmpty) {
-                usersCollectionRef.add(User("debug", "1234", "debug@gmail.com")).await()
-            }
-        } catch (e: Exception) {
 
-        }
-    }
     suspend fun getUsers(){
         try {
             val data = usersCollectionRef

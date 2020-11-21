@@ -93,22 +93,6 @@ class ShoppingListFragment : Fragment() {
                 val scope = CoroutineScope(Dispatchers.Main + parentJob)
 
                 return when (item?.itemId) {        //Defino el comportamiento de los items de la contextual toolbar
-                    R.id.edit -> {
-                        if (favMenu)
-                            Snackbar.make(mainLayout,"You cant edit in Favorite List", Snackbar.LENGTH_SHORT).show()
-                        else {
-                            if (selectedProducts!!.size == 1){
-                                editProductPos = shoppingList!!.indexOf(selectedProducts!![0])
-                                val action_7 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId.toInt(),editProductPos,-1)
-                                actionMode?.finish()
-                                findNavController().navigate(action_7)
-                            }
-                            else
-                                Snackbar.make(mainLayout,"Please select only 1 product to edit", Snackbar.LENGTH_SHORT).show()
-
-                        }
-                        true
-                    }
                     R.id.delete -> {
 
                         scope.launch {

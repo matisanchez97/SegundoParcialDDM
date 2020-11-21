@@ -38,9 +38,6 @@
             android:id="@+id/action_shoppinglistFragment_to_containerProductFragment"
             app:destination="@id/containerProductFragment" />
         <action
-            android:id="@+id/action_shoppinglistFragment_to_addDialogFragment"
-            app:destination="@id/addDialogFragment" />
-        <action
             android:id="@+id/action_shoppinglistFragment_to_settingsActivity"
             app:destination="@id/settingsActivity" />
         <action
@@ -57,27 +54,6 @@
             app:argType="integer" />
         <argument
             android:name="currentUserId"
-            app:argType="integer" />
-        <action
-            android:id="@+id/action_containerProductFragment_to_addDialogFragment"
-            app:destination="@id/addDialogFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/addDialogFragment"
-        android:name="com.utn.segundoparcial.fragments.AddDialogFragment"
-        android:label="fragment_add_dialog"
-        tools:layout="@layout/fragment_add_dialog" >
-        <action
-            android:id="@+id/action_addDialogFragment_to_shoppinglistFragment"
-            app:destination="@id/shoppinglistFragment" />
-        <argument
-            android:name="currentUserId"
-            app:argType="integer" />
-        <argument
-            android:name="editProductId"
-            app:argType="integer" />
-        <argument
-            android:name="newProductId"
             app:argType="integer" />
     </fragment>
     <fragment
@@ -108,10 +84,17 @@
         <action
             android:id="@+id/action_startRaceFragment_to_currentRace"
             app:destination="@id/currentRace" />
+        <argument
+            android:name="currentUserId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/currentRace"
         android:name="com.utn.segundoparcial.fragments.CurrentRaceFragment"
         android:label="fragment_current_race"
-        tools:layout="@layout/fragment_current_race" />
+        tools:layout="@layout/fragment_current_race" >
+        <argument
+            android:name="currentUserId"
+            app:argType="string" />
+    </fragment>
 </navigation>
