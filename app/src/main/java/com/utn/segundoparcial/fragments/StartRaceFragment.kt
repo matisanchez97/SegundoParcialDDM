@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -22,11 +21,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.utn.segundoparcial.BasicMapDemoActivity
 import com.utn.segundoparcial.R
-import kotlinx.android.synthetic.main.fragment_start_race.*
 
 class StartRaceFragment : Fragment()  {
 
@@ -46,6 +42,8 @@ class StartRaceFragment : Fragment()  {
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private var lastKnownLocation: Location? = null
+
+    var currentUserId: String = ""
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -104,8 +102,9 @@ class StartRaceFragment : Fragment()  {
 
     override fun onStart() {
         super.onStart()
+        currentUserId = StartRaceFragmentArgs.fromBundle(requireArguments()).currentUserId
         butFloatStart.setOnClickListener {
-            val action = StartRaceFragmentDirections.actionStartRaceFragmentToCurrentRace()
+            val action = StartRaceFragmentDirections.actionStartRaceFragmentToCurrentRace(currentUserId)
             findNavController().navigate(action)
         }
     }
@@ -210,7 +209,7 @@ class StartRaceFragment : Fragment()  {
     }
 
     companion object {
-        private val TAG = BasicMapDemoActivity::class.java.simpleName
+        private val TAG = StartRaceFragment::class.java.simpleName
         private const val DEFAULT_ZOOM = 15
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
 

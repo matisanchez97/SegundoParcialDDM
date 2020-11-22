@@ -55,7 +55,6 @@ class ShoppingListFragment : Fragment() {
     lateinit var auxQuery: Query
 
     var currentUserId: String = ""
-    var editProductPos: Int = 0
     var currentUser: User? = null
     var shoppingList: MutableList<Product>? = ArrayList<Product>()
     var shoppingListaux: MutableList<Product>? = ArrayList<Product>()
@@ -206,7 +205,7 @@ class ShoppingListFragment : Fragment() {
 
         butFloatAdd.setOnClickListener {
             //val action_5 = ShoppingListFragmentDirections.actionShoppinglistFragmentToAddDialogFragment(currentUserId,-1,-1)
-            val action_6 = ShoppingListFragmentDirections.actionShoppinglistFragmentToStartRaceFragment()
+            val action_6 = ShoppingListFragmentDirections.actionShoppinglistFragmentToStartRaceFragment(currentUser!!.id)
             findNavController().navigate(action_6)
         }
     }
@@ -214,7 +213,7 @@ class ShoppingListFragment : Fragment() {
     fun OnItemClick(position: Int,cardView: CardView){
         if(selectedProducts!!.isEmpty()) {              //Si no estamos en el Contextual Toolbar
             selectedProduct = shoppingList!![position]  //Me voy para el DetailFragment
-            val action_4 = ShoppingListFragmentDirections.actionShoppinglistFragmentToContainerProductFragment(selectedProduct.id, currentUserId.toInt())
+            val action_4 = ShoppingListFragmentDirections.actionShoppinglistFragmentToContainerProductFragment(selectedProduct.id, currentUserId)
             findNavController().navigate(action_4)
         }
         else{

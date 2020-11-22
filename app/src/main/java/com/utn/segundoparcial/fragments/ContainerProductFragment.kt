@@ -26,8 +26,8 @@ class ContainerProductFragment : Fragment() {
     lateinit var viewPager: ViewPager2
     lateinit var tabLayout: TabLayout
     private val PREF_NAME = "myPreferences"
-    var selectedProductId: Int = 0
-    var currentUserId: Int = 0
+    var selectedRaceId: Int = 0
+    var currentUserId: String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,15 +43,15 @@ class ContainerProductFragment : Fragment() {
         super.onStart()
         val sharedPref: SharedPreferences= requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        selectedProductId = ContainerProductFragmentArgs.fromBundle(requireArguments()).selectedProductId
+        selectedRaceId = ContainerProductFragmentArgs.fromBundle(requireArguments()).selectedRaceId
         currentUserId = ContainerProductFragmentArgs.fromBundle(requireArguments()).currentUserId
-        editor.putInt("CURRENT_USER_ID",currentUserId)
-        editor.putInt("SELECTED_PRODUCT_ID",selectedProductId)
+        editor.putString("CURRENT_USER_ID",currentUserId)
+        editor.putInt("SELECTED_RACE_ID",selectedRaceId)
         editor.apply()
-        viewPager.adapter = ViewPageAdapter(requireActivity(),selectedProductId)
+        viewPager.adapter = ViewPageAdapter(requireActivity())
         TabLayoutMediator(tabLayout, viewPager, {tab, position ->
             when (position) {
-                0 -> tab.text = "Detail"
+                0 -> tab.text = "Selected Race"
                 1 -> tab.text = "Similar"
                 2 -> tab.text = "Brand"
                 else -> tab.text = "undefined"
@@ -59,14 +59,13 @@ class ContainerProductFragment : Fragment() {
         }).attach()
     }
 
-    class ViewPageAdapter(fragmanetActivity: FragmentActivity,selectedProductId: Int) : FragmentStateAdapter(fragmanetActivity) {
-        var productId = selectedProductId
+    class ViewPageAdapter(fragmanetActivity: FragmentActivity) : FragmentStateAdapter(fragmanetActivity) {
         override fun createFragment(position: Int): Fragment {
             return when(position){
-                0 -> DetailProductFragment()
-                1 -> SimilarProductFragment()
-                2 -> BrandProductFragment()
-                else -> DetailProductFragment()
+                0 -> SelectedRaceFragment()
+                1 -> SelectedRaceFragment()
+                2 -> SelectedRaceFragment()
+                else -> SelectedRaceFragment()
             }
         }
 

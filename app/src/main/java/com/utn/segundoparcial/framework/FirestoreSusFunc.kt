@@ -8,6 +8,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.entities.Product
+import com.utn.segundoparcial.entities.Race
 import com.utn.segundoparcial.entities.User
 import kotlinx.coroutines.tasks.await
 
@@ -246,6 +247,78 @@ suspend fun getUserById(userid:String): User? {
     }
     return currentUser
 }
+
+suspend fun getRaceByIdandUser(userId:String,raceId:Int): Race? {
+    val db = Firebase.firestore
+    val usersCollectionRef = db.collection("users")
+    val racesCollectionRef = db.collection("races")
+    var currentUser: User? = null
+    var selectedRace: Race? = null
+
+    try{
+        val data = usersCollectionRef
+            .whereEqualTo("id",userId)
+            .get()
+            .await()
+
+        currentUser = data.elementAt(0).toObject<User>()
+        val data2 = racesCollectionRef
+            .whereEqualTo("user",currentUser.username)
+            .whereEqualTo("id",raceId)
+            .get()
+            .await()
+        selectedRace =  data2.elementAt(0).toObject<Race>()
+
+    }
+    catch (e:Exception){
+
+    }
+    return selectedRace
+}
+
+suspend fun getRacesByUser(userId:String): MutableList<Race> {
+    val db = Firebase.firestore
+    val usersCollectionRef = db.collection("users")
+    val racesCollectionRef = db.collection("races")
+    var currentUser: User? = null
+    var selectedRaces: MutableList<Race> = ArrayList<Race>()
+
+    try{
+        val data = usersCollectionRef
+            .whereEqualTo("id",userId)
+            .get()
+            .await()
+
+        currentUser = data.elementAt(0).toObject<User>()
+        val data2 = racesCollectionRef
+            .whereEqualTo("user",currentUser.username)
+            .get()
+            .await()
+        for(race in data2){
+            selectedRaces.add(race.toObject<Race>())
+        }
+    }
+    catch (e:Exception){
+
+    }
+    return selectedRaces
+}
+
+suspend fun addRace(race: Race){
+    val db = Firebase.firestore
+    val racesCollectionRef = db.collection("races")
+    try{
+
+        val data2 = racesCollectionRef
+            .add(race)
+            .await()
+
+    }
+    catch (e:Exception){
+
+    }
+}
+
 
 suspend fun setPrefs(currentUser: User?,context: Context):Int {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)

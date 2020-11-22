@@ -43,7 +43,7 @@ class SimilarProductFragment() : Fragment() {
     val usersCollectionRef = db.collection("users")
     val productsCollectionRef = db.collection("products")
 
-    var productId: Int = 0
+    var raceId: Int = 0
     private val PREF_NAME = "myPreferences"
     private var editor: SharedPreferences.Editor? = null
     var selectedProduct: Product? = null
@@ -66,7 +66,7 @@ class SimilarProductFragment() : Fragment() {
         val parentJob = Job()
         val scope = CoroutineScope(Dispatchers.Main + parentJob)
         editor = sharedPref.edit()
-        productId = sharedPref.getInt("SELECTED_PRODUCT_ID",-1)
+        raceId = sharedPref.getInt("SELECTED_RACE_ID",-1)
         recyclerSimilarProducts.setHasFixedSize(true)
         linearLayoutManager = LinearLayoutManager(context)
         recyclerSimilarProducts.layoutManager = linearLayoutManager
@@ -74,7 +74,7 @@ class SimilarProductFragment() : Fragment() {
         scope.launch {
             val query = productsCollectionRef
                 .whereEqualTo("user","debug")
-                .whereEqualTo("id",productId)
+                .whereEqualTo("id",raceId)
             selectedProduct = getProductByQuery(query)
             getAllProducts(allProducts)
             similarProductList?.removeAll(similarProductList!!)
@@ -94,7 +94,7 @@ class SimilarProductFragment() : Fragment() {
     }
     fun OnItemClick(position: Int,cardView: CardView){
         selectedProduct = similarProductList!![position]
-        editor?.putInt("SELECTED_PRODUCT_ID",selectedProduct!!.id)
+        editor?.putInt("SELECTED_RACE_ID",selectedProduct!!.id)
         editor?.apply()
         val tabLayout = (activity as MainActivity).findViewById<TabLayout>(R.id.tabLayout)
         tabLayout.getTabAt(0)?.select()
@@ -108,14 +108,14 @@ class SimilarProductFragment() : Fragment() {
         super.onResume()
         val sharedPref: SharedPreferences =
             requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        productId = sharedPref.getInt("SELECTED_PRODUCT_ID", -1)
+        raceId = sharedPref.getInt("SELECTED_RACE_ID", -1)
         val parentJob = Job()
         val scope = CoroutineScope(Dispatchers.Main + parentJob)
 
         scope.launch {
             val query = productsCollectionRef
                 .whereEqualTo("user", "debug")
-                .whereEqualTo("id", productId)
+                .whereEqualTo("id", raceId)
             selectedProduct = getProductByQuery(query)
             getAllProducts(allProducts)
             similarProductList?.removeAll(similarProductList!!)

@@ -20,10 +20,19 @@ import android.widget.Chronometer
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.entities.Race
+import com.utn.segundoparcial.entities.User
+import com.utn.segundoparcial.framework.addRace
+import com.utn.segundoparcial.framework.getRacesByUser
+import com.utn.segundoparcial.framework.getUserById
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.time.seconds
@@ -42,7 +51,6 @@ class CurrentRaceFragment : Fragment() {
     private lateinit var butFloatStop: FloatingActionButton
     private lateinit var butFloatPause: FloatingActionButton
     private lateinit var Timer: Chronometer
-    private lateinit var T: Timer
     private var starPoint: Location? = null
     private var race: MutableList<Location> = ArrayList<Location>()
     private var distance:Float = 0.toFloat()
@@ -51,6 +59,12 @@ class CurrentRaceFragment : Fragment() {
     private var route: String =""
     private var i =0
     private var isCounting = false
+    var currentUserId: String = ""
+    var currentUser: User? = null
+    var allRaces: MutableList<Race> = ArrayList<Race>()
+    val parentJob = Job()
+    val scope = CoroutineScope(Dispatchers.Main + parentJob)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireActivity())
@@ -59,7 +73,7 @@ class CurrentRaceFragment : Fragment() {
                 super.onLocationResult(p0)
                 for (location in p0!!.locations) {
                     race.add(location)
-                    route = route + "#" + race.elementAt(i+1).latitude.toString() + "," + race.elementAt(0).longitude.toString()
+                    route = route + "#" + race.elementAt(i+1).latitude.toString() + "," + race.elementAt(i+1).longitude.toString()
                     distance += race.elementAt(i).distanceTo(race.elementAt(i + 1))
                     i++
                     }
@@ -87,6 +101,7 @@ class CurrentRaceFragment : Fragment() {
         Timer.base = SystemClock.elapsedRealtime()
         Timer.start()
         isCounting = true
+        currentUserId = CurrentRaceFragmentArgs.fromBundle(requireArguments()).currentUserId
         Timer.setOnChronometerTickListener {
             time = (SystemClock.elapsedRealtime() - Timer.base)/1000
             if (Timer!=null && time > 0 )
@@ -108,8 +123,15 @@ class CurrentRaceFragment : Fragment() {
             }
         }
         butFloatStop.setOnClickListener {
-            val race = Race(0,"matute",distance.toInt(),time,route)
-            race.routePositions()
+            scope.launch {
+                currentUser = getUserById(currentUserId)
+                allRaces = getRacesByUser(currentUserId)
+                val i = allRaces.size
+                val race = Race(i,currentUser!!.username,distance.toInt(),time,route)
+                addRace(race)
+                val action = CurrentRaceFragmentDirections.actionCurrentRaceToContainerProductFragment(race.id,currentUserId)
+                findNavController().navigate(action)
+            }
         }
     }
 
