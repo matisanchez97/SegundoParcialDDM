@@ -28,9 +28,9 @@
     </fragment>
     <fragment
         android:id="@+id/shoppinglistFragment"
-        android:name="com.utn.segundoparcial.fragments.ShoppingListFragment"
+        android:name="com.utn.segundoparcial.fragments.RaceListFragment"
         android:label="fragment_shopping_list"
-        tools:layout="@layout/fragment_shopping_list">
+        tools:layout="@layout/fragment_race_list">
         <argument
             android:name="loggedUserId"
             app:argType="string" />
@@ -46,9 +46,9 @@
     </fragment>
     <fragment
         android:id="@+id/containerProductFragment"
-        android:name="com.utn.segundoparcial.fragments.ContainerProductFragment"
+        android:name="com.utn.segundoparcial.fragments.ContainerRaceFragment"
         android:label="fragment_container_product"
-        tools:layout="@layout/fragment_container_product" >
+        tools:layout="@layout/fragment_container_race" >
         <argument
             android:name="selectedRaceId"
             app:argType="integer" />
@@ -58,9 +58,9 @@
     </fragment>
     <fragment
         android:id="@+id/similarProductFragment"
-        android:name="com.utn.segundoparcial.fragments.SimilarProductFragment"
+        android:name="com.utn.segundoparcial.fragments.RacesDetailsFragment"
         android:label="fragment_similar_product"
-        tools:layout="@layout/fragment_similar_product" />
+        tools:layout="@layout/fragment_race_details" />
     <fragment
         android:id="@+id/brandProductFragment"
         android:name="com.utn.segundoparcial.fragments.BrandProductFragment"

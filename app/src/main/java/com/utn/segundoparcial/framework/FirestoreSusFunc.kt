@@ -6,6 +6,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.entities.Race
@@ -302,6 +303,37 @@ suspend fun getRacesByUser(userId:String): MutableList<Race> {
 
     }
     return selectedRaces
+}
+
+suspend fun deleteAllRaces(selectedRaces: MutableList<Race>?){
+
+    val db = Firebase.firestore
+    val storage = Firebase.storage
+    val racesCollectionRef = db.collection("races")
+    val isValid = !(selectedRaces!!.any {
+        it.user != selectedRaces!!.elementAt(0).user
+    })
+    try {
+        if (isValid) {
+            val data = racesCollectionRef
+                .whereEqualTo("user",selectedRaces.elementAt(0).user)
+                .get()
+                .await()
+            for (race in data) {
+                if (selectedRaces!!.any {
+                        it.user == race.toObject<Race>().user && it.id == race.toObject<Race>().id
+                    }) {
+                    val raceRef = storage.reference.child("images/" + race.toObject<Race>().user + race.toObject<Race>().id.toString() )
+                    race.reference.delete().await()
+                    raceRef.delete().await()
+
+                }
+            }
+        }
+    }
+    catch (e:Exception){
+
+    }
 }
 
 suspend fun addRace(race: Race){

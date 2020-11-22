@@ -16,10 +16,10 @@ import com.utn.segundoparcial.R
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ContainerProductFragment.newInstance] factory method to
+ * Use the [ContainerRaceFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ContainerProductFragment : Fragment() {
+class ContainerRaceFragment : Fragment() {
 
 
     lateinit var v:View
@@ -33,7 +33,7 @@ class ContainerProductFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_container_product, container, false)
+        v = inflater.inflate(R.layout.fragment_container_race, container, false)
         viewPager = v.findViewById(R.id.viewPager)
         tabLayout = v.findViewById(R.id.tabLayout)
         return v
@@ -43,8 +43,8 @@ class ContainerProductFragment : Fragment() {
         super.onStart()
         val sharedPref: SharedPreferences= requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        selectedRaceId = ContainerProductFragmentArgs.fromBundle(requireArguments()).selectedRaceId
-        currentUserId = ContainerProductFragmentArgs.fromBundle(requireArguments()).currentUserId
+        selectedRaceId = ContainerRaceFragmentArgs.fromBundle(requireArguments()).selectedRaceId
+        currentUserId = ContainerRaceFragmentArgs.fromBundle(requireArguments()).currentUserId
         editor.putString("CURRENT_USER_ID",currentUserId)
         editor.putInt("SELECTED_RACE_ID",selectedRaceId)
         editor.apply()
@@ -52,7 +52,7 @@ class ContainerProductFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager, {tab, position ->
             when (position) {
                 0 -> tab.text = "Selected Race"
-                1 -> tab.text = "Similar"
+                1 -> tab.text = "Race Details"
                 2 -> tab.text = "Brand"
                 else -> tab.text = "undefined"
             }
@@ -63,7 +63,7 @@ class ContainerProductFragment : Fragment() {
         override fun createFragment(position: Int): Fragment {
             return when(position){
                 0 -> SelectedRaceFragment()
-                1 -> SelectedRaceFragment()
+                1 -> RacesDetailsFragment()
                 2 -> SelectedRaceFragment()
                 else -> SelectedRaceFragment()
             }

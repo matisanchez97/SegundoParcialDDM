@@ -12,11 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
-import com.utn.segundoparcial.adapters.ShoppingListAdapter
+import com.utn.segundoparcial.adapters.RaceListAdapter
 import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.framework.getProductByBrand
 import com.utn.segundoparcial.framework.getProductByQuery
@@ -36,7 +35,7 @@ class BrandProductFragment() : Fragment() {
     lateinit var v: View
     lateinit var recyclerBrandProducts: RecyclerView
     lateinit var linearLayoutManager: LinearLayoutManager
-    lateinit var shoppingListAdapter: ShoppingListAdapter
+    lateinit var raceListAdapter: RaceListAdapter
 
     val db = Firebase.firestore
     val usersCollectionRef = db.collection("users")
@@ -78,8 +77,8 @@ class BrandProductFragment() : Fragment() {
             brandProductList?.removeAll(brandProductList!!)
             getProductByBrand(selectedProduct!!.brand,brandProductList)
             if(!(brandProductList.isNullOrEmpty())){
-                shoppingListAdapter = ShoppingListAdapter(brandProductList!!,{position,cardView -> OnItemClick(position,cardView)},{position, cardView -> OnItemLongClick(position,cardView)})
-                recyclerBrandProducts.adapter = shoppingListAdapter
+                //raceListAdapter = RaceListAdapter(brandProductList!!,{ position, cardView -> OnItemClick(position,cardView)},{ position, cardView -> OnItemLongClick(position,cardView)})
+                recyclerBrandProducts.adapter = raceListAdapter
             }
         }
     }

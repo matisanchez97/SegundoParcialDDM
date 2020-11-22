@@ -5,22 +5,25 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
-import com.utn.segundoparcial.adapters.ShoppingListAdapter
+import com.utn.segundoparcial.adapters.RaceListAdapter
 import com.utn.segundoparcial.constants.PRODUCT_CODES
 import com.utn.segundoparcial.entities.Product
+import com.utn.segundoparcial.entities.Race
 import com.utn.segundoparcial.framework.getAllProducts
 import com.utn.segundoparcial.framework.getProductByQuery
+import com.utn.segundoparcial.framework.getRaceByIdandUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,15 +32,16 @@ import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
- * Use the [SimilarProductFragment.newInstance] factory method to
+ * Use the [RacesDetailsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class SimilarProductFragment() : Fragment() {
+class RacesDetailsFragment() : Fragment() {
 
     lateinit var v: View
-    lateinit var recyclerSimilarProducts: RecyclerView
-    lateinit var linearLayoutManager: LinearLayoutManager
-    lateinit var shoppingListAdapter: ShoppingListAdapter
+    lateinit var textViewDistance: TextView
+    lateinit var textViewSpeed: TextView
+    lateinit var textViewTime: TextView
+
 
     val db = Firebase.firestore
     val usersCollectionRef = db.collection("users")
@@ -46,7 +50,8 @@ class SimilarProductFragment() : Fragment() {
     var raceId: Int = 0
     private val PREF_NAME = "myPreferences"
     private var editor: SharedPreferences.Editor? = null
-    var selectedProduct: Product? = null
+    var currentUserId: String? = ""
+    var selectedRace: Race? = null
     var allProducts: MutableList<Product>? = ArrayList<Product>()
     var similarProductList: MutableList<Product>? = ArrayList<Product>()
 
@@ -55,8 +60,10 @@ class SimilarProductFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_similar_product, container, false)
-        recyclerSimilarProducts = v.findViewById(R.id.recyclerSimilarProducts)
+        v = inflater.inflate(R.layout.fragment_race_details, container, false)
+        textViewDistance = v.findViewById(R.id.textViewDistance)
+        textViewSpeed = v.findViewById(R.id.textViewSpeed)
+        textViewTime = v.findViewById(R.id.textViewTime)
         return v
     }
 
@@ -67,32 +74,17 @@ class SimilarProductFragment() : Fragment() {
         val scope = CoroutineScope(Dispatchers.Main + parentJob)
         editor = sharedPref.edit()
         raceId = sharedPref.getInt("SELECTED_RACE_ID",-1)
-        recyclerSimilarProducts.setHasFixedSize(true)
-        linearLayoutManager = LinearLayoutManager(context)
-        recyclerSimilarProducts.layoutManager = linearLayoutManager
+        currentUserId = sharedPref.getString("CURRENT_USER_ID","")
+
 
         scope.launch {
-            val query = productsCollectionRef
-                .whereEqualTo("user","debug")
-                .whereEqualTo("id",raceId)
-            selectedProduct = getProductByQuery(query)
-            getAllProducts(allProducts)
-            similarProductList?.removeAll(similarProductList!!)
-            for(item in PRODUCT_CODES){
-                if (selectedProduct!!.name.startsWith(item)){
-                    for (product in allProducts!!){
-                        if (product!!.name.startsWith(item))
-                            similarProductList?.add(product)
-                    }
-                }
-            }
-            if(!(similarProductList.isNullOrEmpty())){
-                shoppingListAdapter = ShoppingListAdapter(similarProductList!!,{position,cardView -> OnItemClick(position,cardView)},{position , cardView-> OnItemLongClick(position,cardView)})
-                recyclerSimilarProducts.adapter = shoppingListAdapter
-            }
+            selectedRace = getRaceByIdandUser(currentUserId!!,raceId)
+            textViewDistance.text = "Race Distance : " + selectedRace!!.distance.toString() +" mts"
+            textViewSpeed.text = "Avarage Speed Race : "+ (selectedRace!!.distance/selectedRace!!.time).toString() +" mts/s"
+            textViewTime.text = "Race Time : " + selectedRace!!.time.toString() +" seg"
         }
     }
-    fun OnItemClick(position: Int,cardView: CardView){
+    /*fun OnItemClick(position: Int,cardView: CardView){
         selectedProduct = similarProductList!![position]
         editor?.putInt("SELECTED_RACE_ID",selectedProduct!!.id)
         editor?.apply()
@@ -130,6 +122,6 @@ class SimilarProductFragment() : Fragment() {
             recyclerSimilarProducts.adapter?.notifyDataSetChanged()
 
         }
-    }
+    }*/
 
 }
