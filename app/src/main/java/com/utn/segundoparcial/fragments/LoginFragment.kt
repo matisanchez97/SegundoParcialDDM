@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.preference.PreferenceManager
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -22,6 +24,7 @@ import com.google.firebase.storage.ktx.storage
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.constants.PRODUCTS_LIST
 import com.utn.segundoparcial.entities.User
+import com.utn.segundoparcial.framework.getRaceByIdandUser
 import com.wajahatkarim3.roomexplorer.RoomExplorer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +44,7 @@ class LoginFragment : Fragment() {
 
     lateinit var v: View
     lateinit var textFieldMail: TextInputLayout
+    lateinit var imageView: ImageView
     lateinit var textFieldPass: TextInputLayout
     lateinit var butRegister: Button
     lateinit var butLogin: Button
@@ -57,6 +61,7 @@ class LoginFragment : Fragment() {
     val usersCollectionRef = db.collection("users")
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +72,7 @@ class LoginFragment : Fragment() {
         butLogin = v.findViewById(R.id.buttonLogin)
         butRegister = v.findViewById(R.id.buttonRegister)
         loginLayout = v.findViewById(R.id.loginLayout)
+        imageView = v.findViewById(R.id.imageView2)
         return v
     }
 
@@ -77,7 +83,11 @@ class LoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         scope.launch {
-            getUsers()
+            getUsers()/*
+            var race = getRaceByIdandUser("SeKCodkNTFhP2EJcihqdvEzJ4U22",0)
+            Glide.with(imageView.context)
+                .load(Uri.parse(race!!.downloadUri))
+                .into(imageView)*/
             userFound = false
         }
 

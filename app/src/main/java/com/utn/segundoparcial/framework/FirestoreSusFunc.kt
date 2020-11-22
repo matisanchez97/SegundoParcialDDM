@@ -319,6 +319,24 @@ suspend fun addRace(race: Race){
     }
 }
 
+suspend fun updateRace(race: Race){
+    val db = Firebase.firestore
+    val racesCollectionRef = db.collection("races")
+    try{
+
+        val data2 = racesCollectionRef
+            .whereEqualTo("user",race.user)
+            .whereEqualTo("id",race.id)
+            .get()
+            .await()
+        data2.elementAt(0).reference.set(race).await()
+
+    }
+    catch (e:Exception){
+
+    }
+}
+
 
 suspend fun setPrefs(currentUser: User?,context: Context):Int {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)

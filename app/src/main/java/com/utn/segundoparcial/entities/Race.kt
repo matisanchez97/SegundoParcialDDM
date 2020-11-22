@@ -7,6 +7,7 @@ class Race(id:Int,user:String,distance:Int,time:Long,route:String) {
     var user: String
     var distance: Int
     var time: Long
+    var downloadUri: String
     var route: String
 
     constructor() : this(0,"",0,0,"")
@@ -17,16 +18,7 @@ class Race(id:Int,user:String,distance:Int,time:Long,route:String) {
         this.distance = distance
         this.time = time
         this.route = route
+        this.downloadUri = ""
     }
 
-    fun routePositions(): MutableList<LatLng>{
-        val allPos = this.route.split("#")
-        var Positions: MutableList<LatLng> = ArrayList<LatLng>()
-        allPos.toMutableList().removeAt(allPos.lastIndex)
-        for (pos in allPos){
-            val position = pos.split(",")
-            Positions.add(LatLng(position.elementAt(0).toDouble(),position.elementAt(1).toDouble()))
-        }
-        return Positions
-    }
 }

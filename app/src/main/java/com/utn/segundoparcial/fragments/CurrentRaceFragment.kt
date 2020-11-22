@@ -22,7 +22,9 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.maps.android.PolyUtil
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.entities.Race
 import com.utn.segundoparcial.entities.User
@@ -53,10 +55,10 @@ class CurrentRaceFragment : Fragment() {
     private lateinit var Timer: Chronometer
     private var starPoint: Location? = null
     private var race: MutableList<Location> = ArrayList<Location>()
+    private var route: MutableList<LatLng> = ArrayList<LatLng>()
     private var distance:Float = 0.toFloat()
     private var speed:Float = 0.toFloat()
     private var time: Long = 0
-    private var route: String =""
     private var i =0
     private var isCounting = false
     var currentUserId: String = ""
@@ -73,7 +75,7 @@ class CurrentRaceFragment : Fragment() {
                 super.onLocationResult(p0)
                 for (location in p0!!.locations) {
                     race.add(location)
-                    route = route + "#" + race.elementAt(i+1).latitude.toString() + "," + race.elementAt(i+1).longitude.toString()
+                    route.add(LatLng(location.latitude,location.longitude))
                     distance += race.elementAt(i).distanceTo(race.elementAt(i + 1))
                     i++
                     }
@@ -127,7 +129,7 @@ class CurrentRaceFragment : Fragment() {
                 currentUser = getUserById(currentUserId)
                 allRaces = getRacesByUser(currentUserId)
                 val i = allRaces.size
-                val race = Race(i,currentUser!!.username,distance.toInt(),time,route)
+                val race = Race(i,currentUser!!.username,distance.toInt(),time,PolyUtil.encode(route))
                 addRace(race)
                 val action = CurrentRaceFragmentDirections.actionCurrentRaceToContainerProductFragment(race.id,currentUserId)
                 findNavController().navigate(action)
@@ -149,7 +151,7 @@ class CurrentRaceFragment : Fragment() {
                     if (location != null) {
                         starPoint = location
                         race.add(starPoint!!)
-                        route =  race.elementAt(0).latitude.toString() + "," + race.elementAt(0).longitude.toString()
+                        route.add(LatLng(starPoint!!.latitude,starPoint!!.longitude))
                         requestNewLocationData()
                     } else {
 //                        findViewById<TextView>(R.id.latTextView).text = location.latitude.toString()

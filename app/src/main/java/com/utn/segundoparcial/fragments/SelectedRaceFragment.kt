@@ -2,6 +2,7 @@ package com.utn.segundoparcial.fragments
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -16,13 +17,20 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
+import com.google.maps.android.PolyUtil
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.entities.Race
 import com.utn.segundoparcial.framework.getRaceByIdandUser
+import com.utn.segundoparcial.framework.updateRace
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
 
 class SelectedRaceFragment : Fragment() {
 
@@ -30,10 +38,13 @@ class SelectedRaceFragment : Fragment() {
     private var editor: SharedPreferences.Editor? = null
     private var selectedRace : Race? = null
     private var positions: MutableList<LatLng> = ArrayList<LatLng>()
+    lateinit var mSnapshotCallback: GoogleMap.SnapshotReadyCallback
     var raceId: Int = 0
     var currentUserId: String? = ""
     val parentJob = Job()
     val scope = CoroutineScope(Dispatchers.Main + parentJob)
+    val storage = Firebase.storage
+    lateinit var imageRef: StorageReference
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -45,8 +56,9 @@ class SelectedRaceFragment : Fragment() {
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
+
         if (selectedRace != null){
-            positions = selectedRace!!.routePositions()
+            positions = PolyUtil.decode(selectedRace!!.route)
             googleMap
                 .moveCamera(CameraUpdateFactory
                     .newLatLngZoom(positions.elementAt(0),15.toFloat()))
@@ -55,6 +67,11 @@ class SelectedRaceFragment : Fragment() {
                 polylineOptions.add(position)
             }
             googleMap.addPolyline(polylineOptions)
+            googleMap.setOnMapLoadedCallback {
+                googleMap.snapshot(mSnapshotCallback)
+
+            }
+
         }
     }
 
@@ -72,6 +89,20 @@ class SelectedRaceFragment : Fragment() {
         editor = sharedPref.edit()
         raceId = sharedPref.getInt("SELECTED_RACE_ID",-1)
         currentUserId = sharedPref.getString("CURRENT_USER_ID","")
+        mSnapshotCallback = object : GoogleMap.SnapshotReadyCallback{
+            override fun onSnapshotReady(p0: Bitmap?) {
+                scope.launch {
+                    val baos = ByteArrayOutputStream()
+                    p0!!.compress(Bitmap.CompressFormat.JPEG,100,baos)
+                    val data = baos.toByteArray()
+                    imageRef = storage.reference.child("images/" + selectedRace!!.user + selectedRace!!.id.toString())
+                    imageRef.putBytes(data).await()
+                    selectedRace!!.downloadUri = imageRef.downloadUrl.await().toString()
+                    updateRace(selectedRace!!)
+                }
+            }
+        }
+
         scope.launch {
             selectedRace = getRaceByIdandUser(currentUserId!!,raceId)
             val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
