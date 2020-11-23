@@ -92,7 +92,6 @@ class RaceListFragment : Fragment() {
                             raceList?.removeAll(selectedRaces as Collection<Race>)
                             actionMode?.finish()
                             recyclerProducts.adapter?.notifyDataSetChanged()
-
                         }
                         true
                     }
@@ -125,7 +124,7 @@ class RaceListFragment : Fragment() {
                 for (race in raceList!!){
                     total_run += race.distance
                 }
-                Snackbar.make(mainLayout,"The Calculated cost is $" + total_run.toString(), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(mainLayout,"You have run a total of " + total_run.toString() +" mts", Snackbar.LENGTH_SHORT).show()
             }
             R.id.more -> {
                 val action_8 = RaceListFragmentDirections.actionShoppinglistFragmentToSettingsActivity()

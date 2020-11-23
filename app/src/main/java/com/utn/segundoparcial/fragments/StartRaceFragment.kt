@@ -200,7 +200,6 @@ class StartRaceFragment : Fragment()  {
             } else {
                 map?.isMyLocationEnabled = false
                 map?.uiSettings?.isMyLocationButtonEnabled = false
-                lastKnownLocation = null
                 getLocationPermission()
             }
         } catch (e: SecurityException) {

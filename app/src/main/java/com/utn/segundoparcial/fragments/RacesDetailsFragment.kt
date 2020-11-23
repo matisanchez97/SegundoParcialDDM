@@ -1,5 +1,6 @@
 package com.utn.segundoparcial.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -18,11 +19,8 @@ import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.adapters.RaceListAdapter
-import com.utn.segundoparcial.constants.PRODUCT_CODES
 import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.entities.Race
-import com.utn.segundoparcial.framework.getAllProducts
-import com.utn.segundoparcial.framework.getProductByQuery
 import com.utn.segundoparcial.framework.getRaceByIdandUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,18 +40,11 @@ class RacesDetailsFragment() : Fragment() {
     lateinit var textViewSpeed: TextView
     lateinit var textViewTime: TextView
 
-
-    val db = Firebase.firestore
-    val usersCollectionRef = db.collection("users")
-    val productsCollectionRef = db.collection("products")
-
     var raceId: Int = 0
     private val PREF_NAME = "myPreferences"
     private var editor: SharedPreferences.Editor? = null
     var currentUserId: String? = ""
     var selectedRace: Race? = null
-    var allProducts: MutableList<Product>? = ArrayList<Product>()
-    var similarProductList: MutableList<Product>? = ArrayList<Product>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +58,7 @@ class RacesDetailsFragment() : Fragment() {
         return v
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun onStart() {
         super.onStart()
         val sharedPref: SharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -80,7 +72,7 @@ class RacesDetailsFragment() : Fragment() {
         scope.launch {
             selectedRace = getRaceByIdandUser(currentUserId!!,raceId)
             textViewDistance.text = "Race Distance : " + selectedRace!!.distance.toString() +" mts"
-            textViewSpeed.text = "Avarage Speed Race : "+ (selectedRace!!.distance/selectedRace!!.time).toString() +" mts/s"
+            textViewSpeed.text = "Race Average Speed : "+ (selectedRace!!.distance/selectedRace!!.time).toString() +" mts/s"
             textViewTime.text = "Race Time : " + selectedRace!!.time.toString() +" seg"
         }
     }

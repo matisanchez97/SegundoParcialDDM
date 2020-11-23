@@ -11,7 +11,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.utn.segundoparcial.constants.PRODUCTS_LIST
 import com.utn.segundoparcial.entities.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,20 +56,6 @@ class SplashActivity : AppCompatActivity() {
                 result.user.let {
                     debugUser.id = it!!.uid
                     usersCollectionRef.add(debugUser).await()
-                }
-            }
-            val data = productsCollectionRef
-                .whereEqualTo("user", "debug")
-                .get()
-                .await()
-            if (data.isEmpty) {
-                for (product in PRODUCTS_LIST){
-                    var uriToFile = rootUri+ packageName + "drawable/i" + product.id.toString()
-                    file = Uri.parse(uriToFile)
-                    imageRef = storage.reference.child("images/${file.lastPathSegment}")
-                    imageRef.putFile(file).await()
-                    product.addDownloadUri(imageRef.downloadUrl.await())
-                    productsCollectionRef.add(product).await()
                 }
             }
             startActivity(Intent(this@SplashActivity,MainActivity::class.java))

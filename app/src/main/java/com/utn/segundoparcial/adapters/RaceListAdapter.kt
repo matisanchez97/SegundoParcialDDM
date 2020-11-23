@@ -18,6 +18,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class RaceListAdapter (private var raceList: MutableList<Race>, val onItemClick : (Int, CardView) -> Unit, val onItemLongClick : (Int, CardView) -> Unit) : RecyclerView.Adapter<RaceListAdapter.RaceListHolder>(){
     class RaceListHolder (v: View) : RecyclerView.ViewHolder(v){
@@ -28,9 +32,15 @@ class RaceListAdapter (private var raceList: MutableList<Race>, val onItemClick 
             this.view = v
         }
 
-        fun setRace( race_distance: Int){
+        fun setRace( race_date: Long){
             val txt: TextView = view.findViewById(R.id.textAccItem)
-            txt.text =  "Carrera de  " + race_distance.toString() + " metros"
+            val txt2: TextView = view.findViewById(R.id.textDateItem)
+            val txt3: TextView = view.findViewById(R.id.textTimeItem)
+            val raceDate =  LocalDateTime.ofEpochSecond(race_date,0, ZoneOffset.UTC)
+            txt.text = raceDate.format(DateTimeFormatter.ofPattern("EEEE")) + " Run"
+            txt2.text = raceDate.format(DateTimeFormatter.ofPattern("dd/MM/yy"))
+            txt3.text = raceDate.format(DateTimeFormatter.ofPattern("h:mm a"))
+
         }
 
 
@@ -59,10 +69,8 @@ class RaceListAdapter (private var raceList: MutableList<Race>, val onItemClick 
 
     }
     suspend fun loadHolder(holder: RaceListHolder, position: Int){
-        val storage = Firebase.storage
-        lateinit var imageRef: StorageReference
 
-        holder.setRace(raceList[position].distance)
+        holder.setRace(raceList[position].date)
         holder.getCardLayout().setOnClickListener {
             onItemClick(position,holder.getCardLayout())
         }

@@ -22,7 +22,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import com.utn.segundoparcial.R
-import com.utn.segundoparcial.constants.PRODUCTS_LIST
 import com.utn.segundoparcial.entities.User
 import com.utn.segundoparcial.framework.getRaceByIdandUser
 import com.wajahatkarim3.roomexplorer.RoomExplorer

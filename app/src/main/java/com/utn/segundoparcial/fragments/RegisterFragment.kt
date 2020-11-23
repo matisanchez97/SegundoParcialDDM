@@ -17,7 +17,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.R
-import com.utn.segundoparcial.constants.AREA_CODES
 import com.utn.segundoparcial.entities.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,7 +53,7 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     lateinit var firstname: String
     lateinit var phone: String
     private lateinit var mAuth: FirebaseAuth
-
+    private val AREA_CODES =  arrayListOf<String>("+54","+51","+33","+42")
     val parentJob = Job()
     val scope = CoroutineScope(Dispatchers.Main + parentJob)
     val db = Firebase.firestore
