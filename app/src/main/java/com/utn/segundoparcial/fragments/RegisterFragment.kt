@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -34,7 +35,6 @@ import kotlin.collections.ArrayList
  */
 class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     lateinit var v: View
-    lateinit var textFieldUsr2: TextInputLayout
     lateinit var textFieldMail2: TextInputLayout
     lateinit var textFieldPass2: TextInputLayout
     lateinit var textFieldName: TextInputLayout
@@ -65,7 +65,6 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     var day = 0
     var month = 0
     var year = 0
-    var i = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +72,6 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     ): View? {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_register, container, false)
-        textFieldUsr2 = v.findViewById(R.id.textFieldUsr_2)
         textFieldMail2 = v.findViewById(R.id.textFieldMail_2)
         textFieldPass2 = v.findViewById(R.id.textFieldPass_2)
         textFieldName = v.findViewById(R.id.textFieldName)
@@ -109,9 +107,6 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                         users?.add(user.toObject())
                     }
             }
-        if(users!=null)
-            i = users!!.size
-
         butRegister2.setOnClickListener() {
             scope.launch {
                 if (validateInput()) {
@@ -119,7 +114,6 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                 }
             }
         }
-
 
         textFieldDate.editText!!.setOnClickListener(){          //Si hago click en el campo birthday, primero cargo el dia de hoy en variables
             val calendar: Calendar = Calendar.getInstance()     //Y luego ejecuto el dialog del date picker
@@ -131,18 +125,37 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         }
     }
     suspend fun createNewUser(){
-        val result = mAuth.createUserWithEmailAndPassword(email,password).await()
-        result?.user.let {
-            newUser = User(it!!.uid,firstname,phone,birthDate.toEpochDay(),username,password, email)
-            usersCollectionRef.add(newUser).await()
-            val action_3 = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
-            v.findNavController().navigate(action_3)
+        try {
+            val result = mAuth.createUserWithEmailAndPassword(email, password).await()
+            result?.user.let {
+                newUser = User(
+                    it!!.uid,
+                    firstname,
+                    phone,
+                    birthDate.toEpochDay(),
+                    username,
+                    password,
+                    email
+                )
+                usersCollectionRef.add(newUser).await()
+                val action_3 = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+                v.findNavController().navigate(action_3)
+            }
+        }
+        catch (e:FirebaseAuthException){
+            if (e.errorCode == "ERROR_WEAK_PASSWORD")
+                textFieldPass2.error = e.message
+            if (e.errorCode == "ERROR_EMAIL_ALREADY_IN_USE")
+                textFieldMail2.error = e.message
+            if (e.errorCode == "ERROR_INVALID_EMAIL")
+                textFieldMail2.error = e.message
         }
     }
     suspend fun validateInput():Boolean{
         var isValid = true
-        validationList = arrayListOf(textFieldUsr2,textFieldPass2,textFieldName,textFieldPhone,textFieldDate,textFieldArea,textFieldMail2)
-        for(textField in validationList){               //Creo una lista text inputlayout, para verificar que esten todas completas
+        validationList = arrayListOf(textFieldPass2,textFieldName,textFieldPhone,textFieldDate,textFieldArea,textFieldMail2)
+        for(textField in validationList){ //Creo una lista text inputlayout, para verificar que esten todas completas
+            textField.error = null
             if (textField.editText!!.text.isBlank())    //Si no lo estan envio un mensaje de error
             {
                 isValid = false
@@ -150,21 +163,11 @@ class RegisterFragment : Fragment(),DatePickerDialog.OnDateSetListener {
             }
         }
         email = textFieldMail2.editText!!.text.toString()
-        username = textFieldUsr2.editText!!.text.toString()
+        username = email.substringBefore("@")
         password = textFieldPass2.editText!!.text.toString()
         firstname = textFieldName.editText!!.text.toString()
         phone = textFieldArea.editText!!.text.toString() + textFieldPhone.editText!!.text.toString()
-        for (user in users!!){                          //Chequeo si el usuario ya existe, para que no se creen dos usuarios iguales
-            if(user.checkEmail(email))
-            {
-                isValid = false
-                textFieldMail2.error = getString(R.string.error_msg_usr_2)
-            }
-        }
-        if(password.length<6){
-            isValid = false
-            textFieldPass2.error = getString(R.string.error_msg_pass_2)
-        }
+
         return isValid
     }
 

@@ -49,14 +49,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.17" />
+        app:layout_constraintGuide_percent="0.21" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.29" />
+        app:layout_constraintGuide_percent="0.37" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
@@ -77,21 +77,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.41" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.65" />
+        app:layout_constraintGuide_percent="0.53" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.53" />
+        app:layout_constraintGuide_percent="0.69" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textFieldName"
@@ -171,22 +164,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textFieldUsr_2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/guideline12"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline11">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textEditUsr_2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/username" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textFieldMail_2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -210,7 +187,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline12">
+        app:layout_constraintTop_toTopOf="@+id/guideline11">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textEditPass_2"
@@ -283,6 +260,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.77" />
+        app:layout_constraintGuide_percent="0.85" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

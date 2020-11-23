@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -82,11 +83,7 @@ class LoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         scope.launch {
-            getUsers()/*
-            var race = getRaceByIdandUser("SeKCodkNTFhP2EJcihqdvEzJ4U22",0)
-            Glide.with(imageView.context)
-                .load(Uri.parse(race!!.downloadUri))
-                .into(imageView)*/
+            getUsers()
             userFound = false
         }
 
@@ -97,10 +94,10 @@ class LoginFragment : Fragment() {
 
         butLogin.setOnClickListener() {
             scope.launch {
-                if (validateInput()) {
+                if(validateInput())
                     signInUser()
-                } else {                                                                       //Si alguno de los campos esta vacion, devuelvo un mensaje de error
-                    if (inputUser.username.isBlank())
+                else {
+                    if (inputUser.email.isBlank())
                         textFieldMail.error = getString(R.string.error_msg)
                     if (inputUser.password.isBlank())
                         textFieldPass.error = getString(R.string.error_msg)
@@ -137,13 +134,27 @@ class LoginFragment : Fragment() {
         return inputUser.email.isNotBlank() && inputUser.password.isNotBlank()
     }
     suspend fun signInUser(){
-        val result = mAuth.signInWithEmailAndPassword(inputUser.email,inputUser.password).await()
-        result.user.let {
-            val action_2 =
-                LoginFragmentDirections.actionLoginFragmentToWelcomeFragment(
-                    it!!.uid
-                )
-            v.findNavController().navigate(action_2)
+
+        try {
+            val result =
+                mAuth.signInWithEmailAndPassword(inputUser.email, inputUser.password).await()
+            result.user.let {
+                val action_2 =
+                    LoginFragmentDirections.actionLoginFragmentToWelcomeFragment(
+                        it!!.uid
+                    )
+                v.findNavController().navigate(action_2)
+            }
+        }
+        catch (e:FirebaseAuthException){
+            if (e.errorCode == "ERROR_WRONG_PASSWORD")
+                textFieldPass.error = e.message
+            if (e.errorCode == "ERROR_USER_NOT_FOUND")
+                textFieldMail.error = e.message
+            if (e.errorCode == "ERROR_INVALID_EMAIL")
+                textFieldMail.error = e.message
+            if (e.errorCode == "ERROR_USER_MISMATCH")
+                textFieldMail.error = e.message
         }
     }
 }
