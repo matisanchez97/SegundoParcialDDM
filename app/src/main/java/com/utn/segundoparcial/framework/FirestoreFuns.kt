@@ -2,13 +2,10 @@ package com.utn.segundoparcial.framework
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.utn.segundoparcial.R
-import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.entities.Race
 import com.utn.segundoparcial.entities.User
 import kotlinx.coroutines.tasks.await
@@ -55,7 +52,7 @@ suspend fun getRaceByIdandUser(userId:String,raceId:Int): Race? {
 
     }
     catch (e:Exception){
-
+        e.cause
     }
     return selectedRace
 }
@@ -130,7 +127,7 @@ suspend fun addRace(race: Race){
 
     }
     catch (e:Exception){
-
+        e.cause
     }
 }
 

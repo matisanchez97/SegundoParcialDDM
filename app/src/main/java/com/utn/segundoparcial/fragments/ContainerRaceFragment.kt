@@ -17,11 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ContainerRaceFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class ContainerRaceFragment : Fragment() {
 
 
@@ -92,7 +88,7 @@ class ContainerRaceFragment : Fragment() {
             when (position) {
                 0 -> tab.text = "Selected Race"
                 1 -> tab.text = "Race Details"
-                2 -> tab.text = "Brand"
+                2 -> tab.text = "Time Per Kilometer"
                 else -> tab.text = "undefined"
             }
         }).attach()
@@ -103,7 +99,7 @@ class ContainerRaceFragment : Fragment() {
             return when(position){
                 0 -> SelectedRaceFragment()
                 1 -> RacesDetailsFragment()
-                2 -> SelectedRaceFragment()
+                2 -> KilometerTimesFragment()
                 else -> SelectedRaceFragment()
             }
         }

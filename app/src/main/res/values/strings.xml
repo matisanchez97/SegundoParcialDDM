@@ -9,10 +9,10 @@
     <string name="name">First Name</string>
     <string name="password">Password</string>
     <string name="area_code">Area</string>
-    <string name="title_1">List of Races</string>
+    <string name="title_1">RunnerApp</string>
     <string name="title_3a">List of Races</string>
     <string name="title_5">Details of Race</string>
-    <string name="title_6">Products of the same Brand</string>
+    <string name="title_6">Time Per Kilometer of Run</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="icon_acc">Icon for name</string>

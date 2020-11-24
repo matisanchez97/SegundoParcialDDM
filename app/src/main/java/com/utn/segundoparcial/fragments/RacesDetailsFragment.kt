@@ -6,20 +6,10 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.tabs.TabLayout
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
-import com.utn.segundoparcial.adapters.RaceListAdapter
-import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.entities.Race
 import com.utn.segundoparcial.framework.getRaceByIdandUser
 import kotlinx.coroutines.CoroutineScope
@@ -72,48 +62,9 @@ class RacesDetailsFragment() : Fragment() {
         scope.launch {
             selectedRace = getRaceByIdandUser(currentUserId!!,raceId)
             textViewDistance.text = "Race Distance : " + selectedRace!!.distance.toString() +" mts"
-            textViewSpeed.text = "Race Average Speed : "+ (selectedRace!!.distance/selectedRace!!.time).toString() +" mts/s"
-            textViewTime.text = "Race Time : " + selectedRace!!.time.toString() +" seg"
+            textViewSpeed.text = "Race Average Speed : "+ ((selectedRace!!.time*1000)/selectedRace!!.distance).div(60).toString() + "' "+((selectedRace!!.time*1000)/selectedRace!!.distance).rem(60).toString()+"'' /km"
+            textViewTime.text = "Race Time : " + selectedRace!!.time.div(60).toString() + "' " + selectedRace!!.time.rem(60).toString() + "''"
         }
     }
-    /*fun OnItemClick(position: Int,cardView: CardView){
-        selectedProduct = similarProductList!![position]
-        editor?.putInt("SELECTED_RACE_ID",selectedProduct!!.id)
-        editor?.apply()
-        val tabLayout = (activity as MainActivity).findViewById<TabLayout>(R.id.tabLayout)
-        tabLayout.getTabAt(0)?.select()
-    }
-
-    fun OnItemLongClick(position: Int,cardView: CardView){
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val sharedPref: SharedPreferences =
-            requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        raceId = sharedPref.getInt("SELECTED_RACE_ID", -1)
-        val parentJob = Job()
-        val scope = CoroutineScope(Dispatchers.Main + parentJob)
-
-        scope.launch {
-            val query = productsCollectionRef
-                .whereEqualTo("user", "debug")
-                .whereEqualTo("id", raceId)
-            selectedProduct = getProductByQuery(query)
-            getAllProducts(allProducts)
-            similarProductList?.removeAll(similarProductList!!)
-            for (item in PRODUCT_CODES) {
-                if (selectedProduct!!.name.startsWith(item)) {
-                    for (product in allProducts!!) {
-                        if (product!!.name.startsWith(item))
-                            similarProductList?.add(product)
-                    }
-                }
-            }
-            recyclerSimilarProducts.adapter?.notifyDataSetChanged()
-
-        }
-    }*/
 
 }

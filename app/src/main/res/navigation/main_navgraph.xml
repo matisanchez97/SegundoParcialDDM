@@ -66,9 +66,9 @@
         tools:layout="@layout/fragment_race_details" />
     <fragment
         android:id="@+id/brandProductFragment"
-        android:name="com.utn.segundoparcial.fragments.BrandProductFragment"
+        android:name="com.utn.segundoparcial.fragments.KilometerTimesFragment"
         android:label="fragment_brand_product"
-        tools:layout="@layout/fragment_brand_product" />
+        tools:layout="@layout/fragment_kilometer_times" />
     <activity
         android:id="@+id/settingsActivity"
         android:name="com.utn.segundoparcial.SettingsActivity"

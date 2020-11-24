@@ -10,6 +10,7 @@
         android:id="@+id/imageView7"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/colorPrimary"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,18 +18,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/fondo"
         tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/imageView8"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        android:tint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/guideline40"
         app:layout_constraintEnd_toStartOf="@+id/guideline35"
         app:layout_constraintStart_toStartOf="@+id/guideline36"
         app:layout_constraintTop_toTopOf="@+id/guideline41"
-        app:srcCompat="@drawable/ic_shopping_svgrepo_com"
+        app:srcCompat="@drawable/ic_baseline_directions_run_24"
         tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.Guideline

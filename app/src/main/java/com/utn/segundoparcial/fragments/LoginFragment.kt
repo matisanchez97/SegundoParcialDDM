@@ -115,7 +115,6 @@ class LoginFragment : Fragment() {
         editor.apply()
     }
 
-
     suspend fun getUsers(){
         try {
             val data = usersCollectionRef
@@ -123,18 +122,19 @@ class LoginFragment : Fragment() {
                 .await()
             for (user in data)
                 users?.add(user.toObject<User>())
-        } catch (e:Exception){
-
+        }
+        catch (e:Exception){
         }
     }
+
     suspend fun validateInput():Boolean{
         inputUser = User(textFieldPass.editText!!.text.toString(),textFieldMail.editText!!.text.toString())
         textFieldMail.error = null
         textFieldPass.error =null
         return inputUser.email.isNotBlank() && inputUser.password.isNotBlank()
     }
-    suspend fun signInUser(){
 
+    suspend fun signInUser(){
         try {
             val result =
                 mAuth.signInWithEmailAndPassword(inputUser.email, inputUser.password).await()

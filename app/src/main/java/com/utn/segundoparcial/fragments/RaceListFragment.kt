@@ -14,17 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.utn.segundoparcial.MainActivity
 import com.utn.segundoparcial.R
 import com.utn.segundoparcial.adapters.RaceListAdapter
-import com.utn.segundoparcial.entities.Product
 import com.utn.segundoparcial.entities.Race
 import com.utn.segundoparcial.entities.User
 import com.utn.segundoparcial.framework.*
-import kotlinx.android.synthetic.main.fragment_race_list.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -50,11 +47,9 @@ class RaceListFragment : Fragment() {
     var currentUserId: String = ""
     var currentUser: User? = null
     var raceList: MutableList<Race>? = ArrayList<Race>()
-    var raceListaux: MutableList<Race>? = ArrayList<Race>()
     var selectedRaces: MutableList<Race>? = ArrayList<Race>()
     var selectedCards: MutableList<CardView>? = ArrayList<CardView>()
     var actionMode : ActionMode? = null
-    var favMenu = false
 
     private var sortingOrder = 0
     private lateinit var callback : ActionMode.Callback

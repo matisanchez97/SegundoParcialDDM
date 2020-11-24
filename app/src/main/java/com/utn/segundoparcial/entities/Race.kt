@@ -2,7 +2,7 @@ package com.utn.segundoparcial.entities
 
 import com.google.android.gms.maps.model.LatLng
 
-class Race(id:Int,user:String,distance:Int,time:Long,route:String,date:Long) {
+class Race(id:Int,user:String,distance:Int,time:Long,route:String,date:Long,timePerKm: List<Int>) {
     var id: Int
     var user: String
     var distance: Int
@@ -10,8 +10,9 @@ class Race(id:Int,user:String,distance:Int,time:Long,route:String,date:Long) {
     var downloadUri: String
     var route: String
     var date: Long
+    var timePerKm: List<Int>
 
-    constructor() : this(0,"",0,0,"",0)
+    constructor() : this(0,"",0,0,"",0, listOf<Int>())
 
     init{
         this.id = id
@@ -21,6 +22,7 @@ class Race(id:Int,user:String,distance:Int,time:Long,route:String,date:Long) {
         this.route = route
         this.date = date
         this.downloadUri = ""
+            this.timePerKm = timePerKm
     }
 
 }

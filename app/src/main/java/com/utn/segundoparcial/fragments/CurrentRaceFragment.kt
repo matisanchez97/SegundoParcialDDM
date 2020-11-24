@@ -38,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -63,8 +64,12 @@ class CurrentRaceFragment : Fragment() {
     private var race: MutableList<Location> = ArrayList<Location>()
     private var route: MutableList<LatLng> = ArrayList<LatLng>()
     private var distance:Float = 0.toFloat()
-    private var speed:Float = 0.toFloat()
+    private var distanceAux:Float = 0.toFloat()
+    private var distancePerKm:Float = 0.toFloat()
+    private var speedPerKm:MutableList<Int> = arrayListOf(0)
     private var time: Long = 0
+    private var timeAux: Long = 0
+    private var timePerKm: Long = 0
     private var i =0
     private var isCounting = false
     var currentUserId: String = ""
@@ -80,6 +85,7 @@ class CurrentRaceFragment : Fragment() {
                 race.add(location)
                 route.add(LatLng(location.latitude,location.longitude))
                 distance += race.elementAt(i).distanceTo(race.elementAt(i + 1))
+                distancePerKm = distance-distanceAux
                 i++
             }
         }
@@ -90,6 +96,7 @@ class CurrentRaceFragment : Fragment() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this.requireActivity())
         getLastLocation()
+
     }
 
     override fun onCreateView(
@@ -103,37 +110,55 @@ class CurrentRaceFragment : Fragment() {
         Timer = v.findViewById(R.id.view_timer)
         butFloatPause = v.findViewById(R.id.floating_pause_button)
         butFloatStop = v.findViewById(R.id.floating_stop_button)
+
+        Timer.base = SystemClock.elapsedRealtime()
+        Timer.start()
+        isCounting = true
+
         return v
     }
 
     override fun onStart() {
         super.onStart()
-        Timer.base = SystemClock.elapsedRealtime()
-        Timer.start()
-        isCounting = true
         currentUserId = CurrentRaceFragmentArgs.fromBundle(requireArguments()).currentUserId
 
         Timer.setOnChronometerTickListener {
-            time = (SystemClock.elapsedRealtime() - Timer.base)/1000
-            if (Timer!=null && time > 0 )
-                speed = distance.div(time)
-            textViewDistance.text = "Distance :" + distance.toString() +" mts"
-            textViewSpeed.text = "Speed :" + speed.toString() + " mts/s"
+            time = (SystemClock.elapsedRealtime() - Timer.base) / 1000
+            timePerKm = time - timeAux
+            speedPerKm.set(speedPerKm.size - 1, timePerKm.toInt())
+            if ((distancePerKm.toInt() / 1000) >= 1) {
+                speedPerKm.add(0)
+                distanceAux += (distancePerKm - distancePerKm.rem(1000))
+                distancePerKm = 0.toFloat()
+                timeAux += timePerKm
+                timePerKm = 0
+            }
+            val distanceText = "Distance :" + distance.toInt().toString() + " mts"
+            var speedText = "Average Time Per Km :0' 00'' /km"
+            if (distance > 0)
+                speedText = "Average Time Per Km :" + ((time * 1000) / distance).div(60).toInt()
+                    .toString() + "' " + ((time * 1000) / distance).rem(60).toInt()
+                    .toString() + "'' /km"
+            textViewDistance.text = distanceText
+
+            textViewSpeed.text = speedText
         }
+
         butFloatPause.setOnClickListener {
-            if(isCounting){
+            if (isCounting) {
                 Timer.stop()
                 isCounting = false
                 butFloatPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                 fusedLocationProviderClient.removeLocationUpdates(mLocationCallback)
-            } else{
-                Timer.base = SystemClock.elapsedRealtime()-time*1000
+            } else {
+                Timer.base = SystemClock.elapsedRealtime() - time * 1000
                 Timer.start()
                 isCounting = true
                 butFloatPause.setImageResource(R.drawable.ic_baseline_pause_24)
                 requestNewLocationData()
             }
         }
+
         butFloatStop.setOnClickListener {
             scope.launch {
                 Timer.stop()
@@ -143,16 +168,25 @@ class CurrentRaceFragment : Fragment() {
                 allRaces = getRacesByUser(currentUserId)
                 val i = allRaces.size
                 val currentDate = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-                val race = Race(i,currentUser!!.username,distance.toInt(),time,PolyUtil.encode(route),currentDate)
+                val race = Race(
+                    i,
+                    currentUser!!.username,
+                    distance.toInt(),
+                    time,
+                    PolyUtil.encode(route),
+                    currentDate,
+                    speedPerKm.toList()
+                )
                 addRace(race)
-                val action = CurrentRaceFragmentDirections.actionCurrentRaceToContainerProductFragment(race.id,currentUserId)
+                val action =
+                    CurrentRaceFragmentDirections.actionCurrentRaceToContainerProductFragment(
+                        race.id,
+                        currentUserId
+                    )
                 findNavController().navigate(action)
             }
         }
     }
-
-
-
 
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
