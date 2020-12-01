@@ -3,6 +3,7 @@ package com.utn.segundoparcial.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.Color
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
@@ -76,7 +77,7 @@ class SelectedRaceFragment : Fragment() {
     private val callback = OnMapReadyCallback { googleMap ->
         if (selectedRace != null){
             positions = PolyUtil.decode(selectedRace!!.route)
-            val polylineOptions = PolylineOptions()
+            val polylineOptions = PolylineOptions().width(15.toFloat())
             val bounds =setBounds(positions)
             for(position in positions){
                 polylineOptions.add(position)
@@ -86,15 +87,11 @@ class SelectedRaceFragment : Fragment() {
             googleMap.addPolyline(polylineOptions)
             googleMap.setOnMapLoadedCallback {
                 googleMap.snapshot(mSnapshotCallback)
-
             }
 
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -102,10 +99,6 @@ class SelectedRaceFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_selected_race, container, false)
     }
-
-
-
-
 
     override fun onStart() {
         super.onStart()
